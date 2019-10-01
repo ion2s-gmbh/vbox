@@ -19,6 +19,7 @@ to provision the box accordingly.
 
 ## Services
 * Nginx
+* PHP 7.2
 
 ## Owner
 * [ion2s GmbH](http://www.ion2s.com)
