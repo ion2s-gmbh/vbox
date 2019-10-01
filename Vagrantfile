@@ -33,4 +33,6 @@ Vagrant.configure("2") do |config|
       vb.cpus = BOX_CPU
       vb.memory = BOX_MEMORY
   end
+
+  config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
 end
