@@ -1,2 +1,3 @@
 .vagrant
 *.log
+**/index.nginx-debian.html
