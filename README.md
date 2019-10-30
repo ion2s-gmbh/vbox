@@ -17,5 +17,9 @@ to provision the box accordingly.
 * CPU: 2
 * Memory: 4096
 
+## Services
+* Nginx
+* PHP 7.2
+
 ## Owner
 * [ion2s GmbH](http://www.ion2s.com)
