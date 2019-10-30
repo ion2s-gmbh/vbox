@@ -39,6 +39,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
   config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
   config.vm.provision "configure", type: "shell", path: "provisioning/configure.sh"
+  config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh"
   config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
   config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
 end

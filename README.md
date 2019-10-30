@@ -21,6 +21,7 @@ to provision the box accordingly.
 * Nginx
 * PHP 7.2
 * Composer
+* NVM
 * Docker
 * Docker-Compose
 
