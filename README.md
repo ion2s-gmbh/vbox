@@ -20,6 +20,9 @@ to provision the box accordingly.
 ## Services
 * Nginx
 * PHP 7.2
+* Composer
+* Docker
+* Docker-Compose
 
 ## Owner
 * [ion2s GmbH](http://www.ion2s.com)
