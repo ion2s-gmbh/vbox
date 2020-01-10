@@ -34,12 +34,24 @@ Vagrant.configure("2") do |config|
       vb.memory = BOX_MEMORY
   end
 
+  # Base
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
+
+  # Webserver
   config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
+
+  # PHP
   config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
   config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
   config.vm.provision "configure", type: "shell", path: "provisioning/configure.sh"
+
+  # Node
   config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
+
+  # Databases
+  config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh"
+
+  # Docker
   config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
   config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
 end

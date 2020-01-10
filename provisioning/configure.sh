@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-cp /vagrant/provisioning/configs/nginx-default.conf /etc/nginx/sites-available/default
+cp /vagrant/provisioning/configs/nginx/nginx-default.conf /etc/nginx/sites-available/default
 
-cp /vagrant/provisioning/configs/xdebug.ini /etc/php/7.2/mods-available
+cp /vagrant/provisioning/configs/php/xdebug.ini /etc/php/7.2/mods-available
 
 # Nginx config test
 service nginx configtest
