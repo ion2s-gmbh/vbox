@@ -33,21 +33,30 @@ Vagrant.configure("2") do |config|
   # Base
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
 
-  # Webserver
-  config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
+  configure["provision"].each do |provision|
 
-  # PHP
-  config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
-  config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
-  config.vm.provision "configure", type: "shell", path: "provisioning/configure.sh"
+      # Webserver & PHP
+      if provision["nginx"]
+          config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
+          config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
+          config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
+          config.vm.provision "configure", type: "shell", path: "provisioning/configure.sh"
+      end
 
-  # Node
-  config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
+      # Node
+      if provision["nvm"]
+          config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
+      end
 
-  # Databases
-  config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh"
+      # Databases
+      if provision["mysql"]
+          config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh"
+      end
 
-  # Docker
-  config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
-  config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
+      # Docker
+      if provision["docker"]
+          config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
+          config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
+      end
+    end
 end
