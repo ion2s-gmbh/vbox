@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# Mysql configuration
-MYSQL_DATABASE=mydb
-MYSQL_ROOT_PASSWORD=root!
-MYSQL_USER_NAME=app
-MYSQL_USER_PASSWORD=app!
-
 debconf-set-selections <<< "mysql-server mysql-server/root_password password ${MYSQL_ROOT_PASSWORD}"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password ${MYSQL_ROOT_PASSWORD}"
 
