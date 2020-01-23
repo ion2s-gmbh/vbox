@@ -1,8 +1,8 @@
-###########################################
+########################################################################################################################
 #
 # Configure the vagrant box to your needs.
 #
-###########################################
+########################################################################################################################
 
 BOX_BASE: "ubuntu/bionic64"
 BOX_NAME: "vbox-dev"
@@ -12,9 +12,25 @@ BOX_CPU: 2
 BOX_MEMORY: 4096
 HOST_SRC_FOLDER: "./src"
 
-# Provisioning scripts that are run to install and configure software in the box
+########################################################################################################################
+#
+# Provisioning scripts that are run to install and configure software in the box.
+#
+########################################################################################################################
 provision:
-  - nginx: true
-    nvm: true
+  - nginx: false
+    nvm: false
     mysql: true
-    docker: true
+    docker: false
+
+########################################################################################################################
+#
+# Config variables for Mysql.
+# We strongly recommend to use different credentials in your test and prod environments.
+#
+########################################################################################################################
+mysql:
+  MYSQL_DATABASE: mydb
+  MYSQL_ROOT_PASSWORD: root!
+  MYSQL_USER_NAME: app
+  MYSQL_USER_PASSWORD: app!

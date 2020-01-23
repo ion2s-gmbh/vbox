@@ -44,10 +44,13 @@ provision:
 * Mysql
 
 ## Databases
-Mysql credentials:  
-```
-user = root
-password = root!
+Mysql settings and credentials are configured via `box.yml` as well: 
+```yaml
+mysql:
+  MYSQL_DATABASE: mydb
+  MYSQL_ROOT_PASSWORD: root!
+  MYSQL_USER_NAME: app
+  MYSQL_USER_PASSWORD: app!
 ```
 
 ## Owner

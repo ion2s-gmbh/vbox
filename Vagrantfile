@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
       vb.memory = configure["BOX_MEMORY"]
   end
 
-  # Base
+  # Basic tools provisioning
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
 
   configure["provision"].each do |provision|
@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
 
       # Databases
       if provision["mysql"]
-          config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh"
+          config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh", env: configure["mysql"]
       end
 
       # Docker
