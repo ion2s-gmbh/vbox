@@ -21,6 +21,8 @@ to provision the box accordingly.
 * PHP 7.2
 * Composer
 * NVM
+  * Default NodeJS v12.14.1
+  * Default NPM 6.13.4
 * Docker
 * Docker-Compose
 * Mysql
