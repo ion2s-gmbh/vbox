@@ -35,12 +35,15 @@ Vagrant.configure("2") do |config|
 
   configure["provision"].each do |provision|
 
-      # Webserver & PHP
-      if provision["nginx"]
-          config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
+      # PHP
+      if provision["php"]
           config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
           config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
-          config.vm.provision "configure", type: "shell", path: "provisioning/configure.sh"
+      end
+
+      # Nginx
+      if provision["nginx"]
+          config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
       end
 
       # Node
