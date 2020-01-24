@@ -28,8 +28,9 @@ HOST_SRC_FOLDER: "./src"
 In `box.yml` you can also configure which provisioning scripts should be executed:
 ```yaml
 provision:
-  - nginx: true
-    nvm: true
+  - php: true
+    nginx: true
+    nvm: false
     mysql: true
     docker: false # Docker will not be installed
 ```

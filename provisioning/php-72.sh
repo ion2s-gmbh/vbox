@@ -16,4 +16,10 @@ php7.2-sqlite3 \
 php7.2-zip \
 php-xdebug
 
+# Copy configs
+cp /vagrant/provisioning/configs/php/xdebug.ini /etc/php/7.2/mods-available
+
+# Restart PHP
+service php7.2-fpm restart
+
 exit $?
