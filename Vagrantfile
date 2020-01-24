@@ -61,5 +61,10 @@ Vagrant.configure("2") do |config|
           config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
           config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
       end
+
+      # Welcome screen
+      if provision["welcome"]
+          config.vm.provision "welcome", type: "shell", path: "provisioning/welcome.sh", privileged: false
+      end
     end
 end
