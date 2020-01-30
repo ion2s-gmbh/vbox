@@ -44,9 +44,9 @@ If activated the following framework installers will be installed:
 * [Yii](https://www.yiiframework.com/)
 * [Symfony](https://symfony.com/)
 
-You can install the framesworks in the `src` folder by running:
+You can install the frameworks in the `src` folder by running:
 ```shell script
-cd /var/www/html/src
+cd /var/www/html
 laravel new <project-name>
 # OR
 $ lumen new <project-name>
@@ -55,6 +55,9 @@ $ yii-create <project-name>
 # OR
 $ 
 ```
+**Note**
+Make sure to change your webserver's config: `/etc/nginx/sites-available/default`
+and set the correct document root. 
 
 ## Services
 * Nginx
