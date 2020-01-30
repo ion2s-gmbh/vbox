@@ -30,6 +30,7 @@ In `box.yml` you can also configure which provisioning scripts should be execute
 provision:
   - php: true
     nginx: true
+    apache: false
     nvm: false
     mysql: true
     docker: false
@@ -61,6 +62,7 @@ and set the correct document root.
 
 ## Services
 * Nginx
+* Apache (alternative to Nginx)
 * PHP 7.2
 * Composer
 * NVM

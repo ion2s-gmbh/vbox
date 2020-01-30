@@ -20,6 +20,7 @@ HOST_SRC_FOLDER: "./src"
 provision:
   - php: true
     nginx: true
+    apache: false
     nvm: false
     mysql: true
     docker: false
