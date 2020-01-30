@@ -41,6 +41,8 @@ provision:
 If activated the following framework installers will be installed:
 * [Laravel](https://laravel.com/)
 * [Lumen](https://lumen.laravel.com/)
+* [Yii](https://www.yiiframework.com/)
+* [Symfony](https://symfony.com/)
 
 You can install the framesworks in the `src` folder by running:
 ```shell script
@@ -48,6 +50,10 @@ cd /var/www/html/src
 laravel new <project-name>
 # OR
 $ lumen new <project-name>
+#OR
+$ yii-create <project-name>
+# OR
+$ 
 ```
 
 ## Services
