@@ -14,6 +14,7 @@ php7.2-mbstring \
 php7.2-opcache \
 php7.2-sqlite3 \
 php7.2-zip \
+php7.2-intl \
 php-xdebug
 
 # Copy configs
