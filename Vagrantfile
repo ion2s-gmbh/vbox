@@ -46,6 +46,11 @@ Vagrant.configure("2") do |config|
           config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
       end
 
+      # Apache
+      if provision["apache"]
+          config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh"
+      end
+
       # Node
       if provision["nvm"]
           config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
