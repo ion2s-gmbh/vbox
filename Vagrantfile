@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: configure["BOX_IP"]
 
   # Shared folder
-  config.vm.synced_folder configure["HOST_SRC_FOLDER"], "/var/www/html"
+  config.vm.synced_folder configure["HOST_SRC_FOLDER"], "/var/www/html", group: "www-data"
 
   config.vm.provider "virtualbox" do |vb|
       # Give your box a name, that is displayed in the VirtualBox Manager

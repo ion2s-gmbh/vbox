@@ -7,13 +7,12 @@ if [ $? -eq 127 ]; then
   exit 1
 fi
 
+# Laravel & Lumen
 composer global require laravel/lumen-installer
 composer global require laravel/installer
 
-echocmd='export PATH="$PATH:$HOME/.config/composer/vendor/bin"'
-bashrc=$(cat ~/.bashrc)
-
-# Do not provision twice
-if [[ "$bashrc" != *"$echocmd"* ]]; then
-  echo "$echocmd" >>~/.bashrc
-fi
+# Yii PHP Framework
+mkdir -p $HOME/framework-installers
+cp /vagrant/provisioning/scripts/yii-installer.sh $HOME/framework-installers/
+chmod +x $HOME
+sudo ln -s /home/vagrant/framework-installers/yii-installer.sh /usr/local/bin/yii-create
