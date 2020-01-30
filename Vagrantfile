@@ -66,5 +66,10 @@ Vagrant.configure("2") do |config|
       if provision["welcome"]
           config.vm.provision "welcome", type: "shell", path: "provisioning/welcome.sh", privileged: false
       end
+
+      # Frameworks
+      if provision["frameworks"]
+          config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
+      end
     end
 end
