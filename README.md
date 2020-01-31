@@ -23,6 +23,7 @@ BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
 HOST_SRC_FOLDER: "./src"
+OPEN_BROWSER: true
 ```
 
 In `box.yml` you can also configure which provisioning scripts should be executed:
