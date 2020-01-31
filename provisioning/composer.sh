@@ -26,4 +26,17 @@ rm composer-setup.php
 
 ln -s ${INSTALL_DIR}/${FILENAME} /usr/local/bin/${FILENAME}
 
+USER_HOME=/home/vagrant
+
+# Place composer's bin folder in the PATH
+mkdir -p ${USER_HOME}/.config/composer/vendor/bin
+chown vagrant:vagrant ${USER_HOME}/.config -R
+echocmd="export PATH=$PATH:${USER_HOME}/.config/composer/vendor/bin"
+bashrc=$(cat ${USER_HOME}/.bashrc)
+
+# Do not provision twice
+if [[ "$bashrc" != *"$echocmd"* ]]; then
+  echo "$echocmd" >> ${USER_HOME}/.bashrc
+fi
+
 exit $RESULT

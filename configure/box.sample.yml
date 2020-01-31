@@ -11,6 +11,7 @@ BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
 HOST_SRC_FOLDER: "./src"
+OPEN_BROWSER: true
 
 ########################################################################################################################
 #
@@ -20,10 +21,12 @@ HOST_SRC_FOLDER: "./src"
 provision:
   - php: true
     nginx: true
+    apache: false
     nvm: false
     mysql: true
     docker: false
     welcome: true
+    frameworks: true
 
 ########################################################################################################################
 #

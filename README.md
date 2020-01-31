@@ -23,6 +23,7 @@ BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
 HOST_SRC_FOLDER: "./src"
+OPEN_BROWSER: true
 ```
 
 In `box.yml` you can also configure which provisioning scripts should be executed:
@@ -30,13 +31,39 @@ In `box.yml` you can also configure which provisioning scripts should be execute
 provision:
   - php: true
     nginx: true
+    apache: false
     nvm: false
     mysql: true
-    docker: false # Docker will not be installed
+    docker: false
+    welcome: true
+    frameworks: false
 ```
+
+### Frameworks
+If activated the following framework installers will be installed:
+* [Laravel](https://laravel.com/)
+* [Lumen](https://lumen.laravel.com/)
+* [Yii](https://www.yiiframework.com/)
+* [Symfony](https://symfony.com/)
+
+You can install the frameworks in the `src` folder by running:
+```shell script
+cd /var/www/html
+laravel new <project-name>
+# OR
+$ lumen new <project-name>
+#OR
+$ yii-create <project-name>
+# OR
+$ 
+```
+**Note**
+Make sure to change your webserver's config: `/etc/nginx/sites-available/default`
+and set the correct document root. 
 
 ## Services
 * Nginx
+* Apache (alternative to Nginx)
 * PHP 7.2
 * Composer
 * NVM

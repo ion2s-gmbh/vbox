@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: configure["BOX_IP"]
 
   # Shared folder
-  config.vm.synced_folder configure["HOST_SRC_FOLDER"], "/var/www/html"
+  config.vm.synced_folder configure["HOST_SRC_FOLDER"], "/var/www/html", group: "www-data"
 
   config.vm.provider "virtualbox" do |vb|
       # Give your box a name, that is displayed in the VirtualBox Manager
@@ -46,6 +46,11 @@ Vagrant.configure("2") do |config|
           config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
       end
 
+      # Apache
+      if provision["apache"]
+          config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh"
+      end
+
       # Node
       if provision["nvm"]
           config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
@@ -65,6 +70,24 @@ Vagrant.configure("2") do |config|
       # Welcome screen
       if provision["welcome"]
           config.vm.provision "welcome", type: "shell", path: "provisioning/welcome.sh", privileged: false
+      end
+
+      # Frameworks
+      if provision["frameworks"]
+          config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
+      end
+    end
+
+    if configure["OPEN_BROWSER"]
+      config.trigger.after [:up] do |trigger|
+          trigger.name = "Up and running"
+          trigger.info = "Vbox is up and running. Build something amazing."
+          if Vagrant::Util::Platform.linux?
+            trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
+          end
+          if Vagrant::Util::Platform.windows?
+            trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
+          end
       end
     end
 end
