@@ -1,9 +1,26 @@
-
+require 'yaml'
 require 'erb'
 
 # Load the box configuration
-require 'yaml'
-configure = YAML.load_file(File.join(__dir__, '..', 'box.yml'))
+# Tries to load the yml file:
+# 1) from outside the vbox folder (../)
+# 2) from the vbox folder
+# 3) from vbox/configure folder
+external = File.join(__dir__, '..', 'box.yml')
+internal = File.join(__dir__, 'box.yml')
+nested = File.join(__dir__, 'configure', 'box.yml')
+if (File.exist?(external))
+  configure = YAML.load_file(external)
+  puts "Using #{external}"
+elsif (File.exist?(internal))
+  configure = YAML.load_file(internal)
+  puts "Using #{internal}"
+elsif (File.exist?(nested))
+  configure = YAML.load_file(nested)
+  puts "Using #{nested}"
+else
+  raise 'No box.yml found. Copy and paste configure/box.sample.yml in your main project and name it box.yml.'
+end
 
 Vagrant.configure("2") do |config|
   config.vm.box = configure["BOX_BASE"]
