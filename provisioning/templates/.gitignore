@@ -1,0 +1,5 @@
+*
+!apache
+!nginx
+!.gitignore
+!*.erb

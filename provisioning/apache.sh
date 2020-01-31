@@ -5,10 +5,7 @@ apt-get install apache2 -y
 adduser vagrant www-data
 
 # Copy the vhost config
-#cp /vagrant/provisioning/configs/nginx/nginx-default.conf /etc/nginx/sites-available/default
-
-# Remove the default index page of nginx
-#rm /var/www/html/index.nginx-debian.html
+cp /vagrant/provisioning/templates/pache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 sudo a2enmod proxy_fcgi setenvif
 sudo a2enconf php7.2-fpm

@@ -19,9 +19,10 @@ mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "USE mysql; CREATE USER '${MYSQL_USE
 mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER_NAME}'@'localhost';" > /dev/null 2>&1
 mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "FLUSH PRIVILEGES;" > /dev/null 2>&1
 
-# Initial migration
-mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" < /vagrant/provisioning/migrations/00_initDB.sql
-
+# Initial migration of the database
+if test -f /tmp/mysql/migration.sql; then
+  mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" < /tmp/mysql/migration.sql
+fi
 
 service mysql restart
 

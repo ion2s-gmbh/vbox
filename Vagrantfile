@@ -1,7 +1,26 @@
+require 'yaml'
+require 'erb'
 
 # Load the box configuration
-require 'yaml'
-configure = YAML.load_file('configure/box.yml')
+# Tries to load the yml file:
+# 1) from outside the vbox folder (../)
+# 2) from the vbox folder
+# 3) from vbox/configure folder
+external = File.join(__dir__, '..', 'box.yml')
+internal = File.join(__dir__, 'box.yml')
+nested = File.join(__dir__, 'configure', 'box.yml')
+if (File.exist?(external))
+  configure = YAML.load_file(external)
+  puts "Using #{external}"
+elsif (File.exist?(internal))
+  configure = YAML.load_file(internal)
+  puts "Using #{internal}"
+elsif (File.exist?(nested))
+  configure = YAML.load_file(nested)
+  puts "Using #{nested}"
+else
+  raise 'No box.yml found. Copy and paste configure/box.sample.yml in your main project and name it box.yml.'
+end
 
 Vagrant.configure("2") do |config|
   config.vm.box = configure["BOX_BASE"]
@@ -33,6 +52,14 @@ Vagrant.configure("2") do |config|
   # Basic tools provisioning
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
 
+  # Generate configs
+  vars = configure['templates']
+  nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
+  File.write('provisioning/templates/nginx/nginx-default.conf', nginxConf.result(binding))
+
+  apacheConf = ERB.new File.read("provisioning/templates/apache/000-default.conf.erb")
+  File.write('provisioning/templates/apache/000-default.conf', apacheConf.result(binding))
+
   configure["provision"].each do |provision|
 
       # PHP
@@ -58,6 +85,9 @@ Vagrant.configure("2") do |config|
 
       # Databases
       if provision["mysql"]
+          if File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
+              config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
+          end
           config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh", env: configure["mysql"]
       end
 

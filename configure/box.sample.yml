@@ -33,9 +33,23 @@ provision:
 # Config variables for Mysql.
 # We strongly recommend to use different credentials in your test and prod environments.
 #
+# The migration file is only used, if it exists.
+# If the file exists, it is copied to /tmp/mysql/migration.sql in the vagrant box and imported by the mysql.sh
+# provisioning script.
+#
 ########################################################################################################################
 mysql:
   MYSQL_DATABASE: mydb
   MYSQL_ROOT_PASSWORD: root!
   MYSQL_USER_NAME: app
   MYSQL_USER_PASSWORD: app!
+  MYSQL_MIGRATION_FILE: path/to/migration.sql
+
+########################################################################################################################
+#
+# Here you can define variables that can be passed to templates e.g. to individually create config files for
+# webservers.
+#
+########################################################################################################################
+templates:
+  WEB_ROOT: /var/www/html
