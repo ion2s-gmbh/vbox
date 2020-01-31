@@ -83,7 +83,7 @@ Vagrant.configure("2") do |config|
           trigger.name = "Up and running"
           trigger.info = "Vbox is up and running. Build something amazing."
           if Vagrant::Util::Platform.linux?
-            trigger.run = {inline: "bash -c 'xdg-open http://#{configure['BOX_IP']}'"}
+            trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
           end
           if Vagrant::Util::Platform.windows?
             trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
