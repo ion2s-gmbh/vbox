@@ -6,7 +6,7 @@ adduser www-data vagrant
 adduser vagrant www-data
 
 # Copy the vhost config
-cp /vagrant/provisioning/configs/nginx/nginx-default.conf /etc/nginx/sites-available/default
+cp /vagrant/provisioning/templates/nginx/nginx-default.conf /etc/nginx/sites-available/default
 
 # Remove the default index page of nginx
 rm /var/www/html/index.nginx-debian.html

@@ -39,3 +39,9 @@ mysql:
   MYSQL_ROOT_PASSWORD: root!
   MYSQL_USER_NAME: app
   MYSQL_USER_PASSWORD: app!
+
+templates:
+  nginx:
+    WEB_ROOT: /var/www/html
+  apache:
+    WEB_ROOT: /var/www/html

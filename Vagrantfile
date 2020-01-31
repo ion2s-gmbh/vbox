@@ -1,4 +1,6 @@
 
+require 'erb'
+
 # Load the box configuration
 require 'yaml'
 configure = YAML.load_file('configure/box.yml')
@@ -32,6 +34,14 @@ Vagrant.configure("2") do |config|
 
   # Basic tools provisioning
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
+
+  # Generate configs
+  vars = configure['templates']
+  nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
+  File.write('provisioning/templates/nginx/nginx-default.conf', nginxConf.result(binding))
+
+#   apacheConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
+#   File.write('provisioning/templates/nginx/nginx-default.conf', apacheConf.result(binding))
 
   configure["provision"].each do |provision|
 
