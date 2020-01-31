@@ -6,6 +6,11 @@ Virtualbox.
 
 ## Usage
 1. Clone this Repository
+1. Copy the `configure/box.sample.yml` file to on of the following places:
+    1. `../box.yml` (recommended if vbox is embedded (e.g. as a submodule) into a project)
+    1. `box.yml` (recommended if vbox is used as a new and fresh git repo)
+    1. `configure/box.yml` (recommended for development)
+1. Adjust the setting in `box.yml`
 1. Run `vagrant up`
 
 You can enable/disable certain provisioning scripts in the Vagrantfile and run `vagrant provision`
@@ -55,7 +60,7 @@ $ lumen new <project-name>
 #OR
 $ yii-create <project-name>
 # OR
-$ 
+$ symfony new <project-name> [--full]
 ```
 **Note**
 Make sure to change your webserver's config: `/etc/nginx/sites-available/default`
