@@ -86,6 +86,7 @@ mysql:
   MYSQL_ROOT_PASSWORD: root!
   MYSQL_USER_NAME: app
   MYSQL_USER_PASSWORD: app!
+  MYSQL_MIGRATION_FILE: path/to/migration.sql
 ```
 
 ## Owner
