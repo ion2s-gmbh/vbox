@@ -77,4 +77,17 @@ Vagrant.configure("2") do |config|
           config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
       end
     end
+
+    if configure["OPEN_BROWSER"]
+      config.trigger.after [:up] do |trigger|
+          trigger.name = "Up and running"
+          trigger.info = "Vbox is up and running. Build something amazing."
+          if Vagrant::Util::Platform.linux?
+            trigger.run = {inline: "bash -c 'xdg-open http://#{configure['BOX_IP']}'"}
+          end
+          if Vagrant::Util::Platform.windows?
+            trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
+          end
+      end
+    end
 end
