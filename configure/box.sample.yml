@@ -3,7 +3,6 @@
 # Configure the vagrant box to your needs.
 #
 ########################################################################################################################
-
 BOX_BASE: "ubuntu/bionic64"
 BOX_NAME: "vbox-dev"
 BOX_VERSION: "20190726.0.0"

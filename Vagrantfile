@@ -1,25 +1,25 @@
-require 'yaml'
-require 'erb'
+require "yaml"
+require "erb"
 
 # Load the box configuration
 # Tries to load the yml file:
 # 1) from outside the vbox folder (../)
 # 2) from the vbox folder
 # 3) from vbox/configure folder
-external = File.join(__dir__, '..', 'box.yml')
-internal = File.join(__dir__, 'box.yml')
-nested = File.join(__dir__, 'configure', 'box.yml')
+external = File.join(__dir__, "..", "box.yml")
+internal = File.join(__dir__, "box.yml")
+nested = File.join(__dir__, "configure", "box.yml")
 if (File.exist?(external))
   configure = YAML.load_file(external)
-  puts "Using #{external}"
+  puts "Used box configuration: #{external}"
 elsif (File.exist?(internal))
   configure = YAML.load_file(internal)
-  puts "Using #{internal}"
+  puts "Used box configuration: #{internal}"
 elsif (File.exist?(nested))
   configure = YAML.load_file(nested)
-  puts "Using #{nested}"
+  puts "Used box configuration: #{nested}"
 else
-  raise 'No box.yml found. Copy and paste configure/box.sample.yml in your main project and name it box.yml.'
+  raise "No box.yml found. Copy and paste configure/box.sample.yml in your main project and name it box.yml."
 end
 
 Vagrant.configure("2") do |config|
@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_check_update = false
 
   # Give your box a name, that is displayed in the commandline and in
-  # the VirtualBox's bash.
+  # the VirtualBox"s bash.
   config.vm.define configure["BOX_NAME"] do |vm| end
   config.vm.host_name = configure["BOX_NAME"]
 
@@ -53,12 +53,16 @@ Vagrant.configure("2") do |config|
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
 
   # Generate configs
-  vars = configure['templates']
-  nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
-  File.write('provisioning/templates/nginx/nginx-default.conf', nginxConf.result(binding))
+  vars = configure["templates"]
+  unless File.exist?("provisioning/templates/nginx/nginx-default.conf")
+    nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
+    File.write("provisioning/templates/nginx/nginx-default.conf", nginxConf.result(binding))
+  end
 
-  apacheConf = ERB.new File.read("provisioning/templates/apache/000-default.conf.erb")
-  File.write('provisioning/templates/apache/000-default.conf', apacheConf.result(binding))
+  unless File.exist?("provisioning/templates/apache/000-default.conf")
+    apacheConf = ERB.new File.read("provisioning/templates/apache/000-default.conf.erb")
+    File.write("provisioning/templates/apache/000-default.conf", apacheConf.result(binding))
+  end
 
   configure["provision"].each do |provision|
 
