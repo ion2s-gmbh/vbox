@@ -20,3 +20,5 @@ sudo ln -s /home/vagrant/framework-installers/yii-installer.sh /usr/local/bin/yi
 # Symfony Framework
 wget https://get.symfony.com/cli/installer -O - | bash
 sudo ln -s /home/vagrant/.symfony/bin/symfony /usr/local/bin/symfony
+
+exit 0
