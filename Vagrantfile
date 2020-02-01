@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
 
       # Databases
       if provision["mysql"]
-          if File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
+          if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
               config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
           end
           config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh", env: configure["mysql"]
