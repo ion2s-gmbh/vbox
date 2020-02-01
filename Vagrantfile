@@ -29,15 +29,11 @@ end
 # Generate configs
 ########################################################################################################################
 vars = configure["templates"]
-unless File.exist?("provisioning/templates/nginx/nginx-default.conf")
-  nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
-  File.write("provisioning/templates/nginx/nginx-default.conf", nginxConf.result(binding))
-end
+nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
+File.write("provisioning/templates/nginx/nginx-default.conf", nginxConf.result(binding))
 
-unless File.exist?("provisioning/templates/apache/000-default.conf")
-  apacheConf = ERB.new File.read("provisioning/templates/apache/000-default.conf.erb")
-  File.write("provisioning/templates/apache/000-default.conf", apacheConf.result(binding))
-end
+apacheConf = ERB.new File.read("provisioning/templates/apache/000-default.conf.erb")
+File.write("provisioning/templates/apache/000-default.conf", apacheConf.result(binding))
 
 ########################################################################################################################
 # Vagrant provisioning
