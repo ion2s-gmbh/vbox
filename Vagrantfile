@@ -1,11 +1,14 @@
 require "yaml"
 require "erb"
 
+########################################################################################################################
 # Load the box configuration
+#
 # Tries to load the yml file:
 # 1) from outside the vbox folder (../)
 # 2) from the vbox folder
 # 3) from vbox/configure folder
+########################################################################################################################
 external = File.join(__dir__, "..", "box.yml")
 internal = File.join(__dir__, "box.yml")
 nested = File.join(__dir__, "configure", "box.yml")
@@ -22,6 +25,23 @@ else
   raise "No box.yml found. Copy and paste configure/box.sample.yml in your main project and name it box.yml."
 end
 
+########################################################################################################################
+# Generate configs
+########################################################################################################################
+vars = configure["templates"]
+unless File.exist?("provisioning/templates/nginx/nginx-default.conf")
+  nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
+  File.write("provisioning/templates/nginx/nginx-default.conf", nginxConf.result(binding))
+end
+
+unless File.exist?("provisioning/templates/apache/000-default.conf")
+  apacheConf = ERB.new File.read("provisioning/templates/apache/000-default.conf.erb")
+  File.write("provisioning/templates/apache/000-default.conf", apacheConf.result(binding))
+end
+
+########################################################################################################################
+# Vagrant provisioning
+########################################################################################################################
 Vagrant.configure("2") do |config|
   config.vm.box = configure["BOX_BASE"]
 
@@ -51,18 +71,6 @@ Vagrant.configure("2") do |config|
 
   # Basic tools provisioning
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
-
-  # Generate configs
-  vars = configure["templates"]
-  unless File.exist?("provisioning/templates/nginx/nginx-default.conf")
-    nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
-    File.write("provisioning/templates/nginx/nginx-default.conf", nginxConf.result(binding))
-  end
-
-  unless File.exist?("provisioning/templates/apache/000-default.conf")
-    apacheConf = ERB.new File.read("provisioning/templates/apache/000-default.conf.erb")
-    File.write("provisioning/templates/apache/000-default.conf", apacheConf.result(binding))
-  end
 
   configure["provision"].each do |provision|
 
@@ -112,6 +120,7 @@ Vagrant.configure("2") do |config|
       end
     end
 
+    # Open default browser on host
     if configure["OPEN_BROWSER"]
       config.trigger.after [:up] do |trigger|
           trigger.name = "Up and running"
