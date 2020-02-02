@@ -28,7 +28,7 @@ end
 ########################################################################################################################
 # Generate configs
 ########################################################################################################################
-vars = configure["templates"]
+vars = configure
 nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
 File.write("provisioning/templates/nginx/nginx-default.conf", nginxConf.result(binding))
 

@@ -1,12 +1,12 @@
 # Default server configuration
 #
 server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
+        listen 80;
+        listen [::]:80;
         root <%= vars['WEB_ROOT'] %>;
         index index.php index.html;
 
-        server_name _;
+        server_name <%= vars['SERVER_NAME'] %> <%= vars['BOX_IP'] %>;
 
         location / {
                 # Rewriting requests to index.php (framework mode)
