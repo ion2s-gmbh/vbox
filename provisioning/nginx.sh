@@ -2,7 +2,6 @@
 
 apt-get install nginx -y
 
-adduser www-data vagrant
 adduser vagrant www-data
 
 # Copy the vhost config
