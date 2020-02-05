@@ -28,8 +28,23 @@ BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
 HOST_SRC_FOLDER: "./src"
+
+WEB_ROOT: /var/www/html
+SERVER_NAME: dev.box
+USE_SSL: false
 OPEN_BROWSER: true
 ```
+
+### SSL
+If SSL is enabled (`USE_SSL`) there will be to files created during provisioning:
+* vbox.cert
+* vbox.key
+The CN of the created certificate will match `SERVER_NAME`.  
+The created key and certificate will be used in Nginx and Apache. All traffic to http
+is redirected to https.
+
+The SSL files will not be versioned as this is generally not recommended for security
+reasons.
 
 In `box.yml` you can also configure which provisioning scripts should be executed:
 ```yaml
@@ -45,7 +60,7 @@ provision:
 ```
 
 ### Frameworks
-If activated the following framework installers will be installed:
+If activated the following framework installers will be available:
 * [Laravel](https://laravel.com/)
 * [Lumen](https://lumen.laravel.com/)
 * [Yii](https://www.yiiframework.com/)
@@ -64,7 +79,7 @@ $ symfony new <project-name> [--full]
 ```
 **Note**
 Make sure to change your webserver's config: `/etc/nginx/sites-available/default`
-and set the correct document root. 
+and set the correct document root.
 
 ## Services
 * Nginx
@@ -79,7 +94,7 @@ and set the correct document root.
 * Mysql
 
 ## Databases
-Mysql settings and credentials are configured via `box.yml` as well: 
+Mysql settings and credentials are configured via `box.yml` as well:
 ```yaml
 mysql:
   MYSQL_DATABASE: mydb
