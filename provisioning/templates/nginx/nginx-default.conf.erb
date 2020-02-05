@@ -1,12 +1,43 @@
 # Default server configuration
 #
 server {
-        listen 80;
-        listen [::]:80;
+        listen 80 default_server;
+        listen [::]:80 default_server;
         root <%= vars['WEB_ROOT'] %>;
         index index.php index.html;
 
         server_name <%= vars['SERVER_NAME'] %> <%= vars['BOX_IP'] %>;
+
+        <% if vars['USE_SSL'] %>
+        return 301 https://$host$request_uri;
+        <% else %>
+        location / {
+                # Rewriting requests to index.php (framework mode)
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        # pass PHP scripts to FastCGI server
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+
+            # With php-fpm (or other unix sockets):
+            fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        }
+        <% end %>
+}
+
+<% if vars['USE_SSL'] %>
+server {
+        listen 443 ssl;
+        listen [::]:443;
+        root <%= vars['WEB_ROOT'] %>;
+        index index.php index.html;
+
+        server_name <%= vars['SERVER_NAME'] %> <%= vars['BOX_IP'] %>;
+        ssl_certificate     /vagrant/files/dev.host.cert;
+        ssl_certificate_key /vagrant/files/dev.host.key;
+        ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
 
         location / {
                 # Rewriting requests to index.php (framework mode)
@@ -21,3 +52,4 @@ server {
             fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
         }
 }
+<% end %>

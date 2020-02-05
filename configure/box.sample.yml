@@ -15,6 +15,7 @@ OPEN_BROWSER: true
 WEB_ROOT: /var/www/html
 SERVER_NAME: dev.box
 OPEN_BROWSER: true
+USE_SSL: true
 
 ########################################################################################################################
 #
