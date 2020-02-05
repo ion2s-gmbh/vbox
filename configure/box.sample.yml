@@ -12,6 +12,11 @@ BOX_MEMORY: 4096
 HOST_SRC_FOLDER: "./src"
 OPEN_BROWSER: true
 
+WEB_ROOT: /var/www/html
+SERVER_NAME: dev.box
+USE_SSL: true
+OPEN_BROWSER: true
+
 ########################################################################################################################
 #
 # Customized settings for the provisioning of services.
