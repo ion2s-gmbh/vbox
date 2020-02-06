@@ -22,14 +22,14 @@ OPEN_BROWSER: true
 #
 ########################################################################################################################
 provision:
-  - php: true
-    nginx: true
-    apache: false
-    nvm: false
-    mysql: true
-    docker: false
-    welcome: true
-    frameworks: true
+  php: true
+  nginx: true
+  apache: false
+  nvm: false
+  mysql: true
+  docker: false
+  welcome: true
+  frameworks: true
 
 ########################################################################################################################
 #

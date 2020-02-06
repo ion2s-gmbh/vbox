@@ -68,69 +68,66 @@ Vagrant.configure("2") do |config|
   # Basic tools provisioning
   config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
 
-  configure["provision"].each do |provision|
+  # PHP
+  if configure["provision"]["php"]
+      config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
+      config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
+  end
 
-      # PHP
-      if provision["php"]
-          config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
-          config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
-      end
+  if configure["USE_SSL"]
+    config.vm.provision "SSL", type: "shell", path: "provisioning/createSSLCert.sh", privileged: false, env: configure
+  end
 
-      if configure["USE_SSL"]
-        config.vm.provision "SSL", type: "shell", path: "provisioning/createSSLCert.sh", privileged: false, env: configure
-      end
+  # Nginx
+  if configure["provision"]["nginx"]
+      config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
+  end
 
-      # Nginx
-      if provision["nginx"]
-          config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
-      end
+  # Apache
+  if configure["provision"]["apache"]
+      config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh"
+  end
 
-      # Apache
-      if provision["apache"]
-          config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh"
-      end
+  # Node
+  if configure["provision"]["nvm"]
+      config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
+  end
 
-      # Node
-      if provision["nvm"]
-          config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
+  # Databases
+  if configure["provision"]["mysql"]
+      if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
+          config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
       end
+      config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh", env: configure["mysql"]
+  end
 
-      # Databases
-      if provision["mysql"]
-          if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
-              config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
-          end
-          config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh", env: configure["mysql"]
-      end
+  # Docker
+  if configure["provision"]["docker"]
+      config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
+      config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
+  end
 
-      # Docker
-      if provision["docker"]
-          config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
-          config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
-      end
+  # Welcome screen
+  if configure["provision"]["welcome"]
+      config.vm.provision "welcome", type: "shell", path: "provisioning/welcome.sh", privileged: false
+  end
 
-      # Welcome screen
-      if provision["welcome"]
-          config.vm.provision "welcome", type: "shell", path: "provisioning/welcome.sh", privileged: false
-      end
+  # Frameworks
+  if configure["provision"]["frameworks"]
+      config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
+  end
 
-      # Frameworks
-      if provision["frameworks"]
-          config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
-      end
+  # Open default browser on host
+  if configure["provision"]["nginx"] && (configure["provision"]["nginx"] || configure["provision"]["apache"])
+    config.trigger.after [:up] do |trigger|
+        trigger.name = "Up and running"
+        trigger.info = "Vbox is up and running. Build something amazing."
+        if Vagrant::Util::Platform.linux?
+          trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
+        end
+        if Vagrant::Util::Platform.windows?
+          trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
+        end
     end
-
-    # Open default browser on host
-    if configure["OPEN_BROWSER"]
-      config.trigger.after [:up] do |trigger|
-          trigger.name = "Up and running"
-          trigger.info = "Vbox is up and running. Build something amazing."
-          if Vagrant::Util::Platform.linux?
-            trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
-          end
-          if Vagrant::Util::Platform.windows?
-            trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
-          end
-      end
-    end
+  end
 end
