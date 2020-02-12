@@ -3,6 +3,6 @@
 apt-get update
 
 apt-get install -y \
-unzip
+${PACKAGES}
 
 exit $?

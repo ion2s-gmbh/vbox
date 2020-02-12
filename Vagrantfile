@@ -65,8 +65,16 @@ Vagrant.configure("2") do |config|
       vb.memory = configure["BOX_MEMORY"]
   end
 
-  # Basic tools provisioning
-  config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
+  # Packages preinstall
+  packages = configure["packages"]
+  if !packages["preinstall"].nil? && !packages["preinstall"].empty?
+    # Basic tools provisioning
+    pkgs = packages["preinstall"].join(" ");
+    config.vm.provision "preinstall",
+     type: "shell",
+     path: "provisioning/packages.sh",
+     env: {"PACKAGES" => pkgs}
+  end
 
   # PHP
   if configure["provision"]["php"]
@@ -115,6 +123,16 @@ Vagrant.configure("2") do |config|
   # Frameworks
   if configure["provision"]["frameworks"]
       config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
+  end
+
+
+  # Packes post install
+  if !packages["postinstall"].nil? && !packages["postinstall"].empty?
+    packages = packages["postinstall"].join(" ");
+    config.vm.provision "postinstall",
+     type: "shell",
+     path: "provisioning/packages.sh",
+     env: {"PACKAGES" => packages}
   end
 
   # Open default browser on host
