@@ -67,10 +67,10 @@ Vagrant.configure("2") do |config|
 
   # Packages preinstall
   packages = configure["packages"]
-  if !packages["preinstall"].nil? && !packages["preinstall"].empty?
+  if !packages["preprovision"].nil? && !packages["preprovision"].empty?
     # Basic tools provisioning
-    pkgs = packages["preinstall"].join(" ");
-    config.vm.provision "preinstall",
+    pkgs = packages["preprovision"].join(" ");
+    config.vm.provision "preprovsion",
      type: "shell",
      path: "provisioning/packages.sh",
      env: {"PACKAGES" => pkgs}
@@ -127,9 +127,9 @@ Vagrant.configure("2") do |config|
 
 
   # Packes post install
-  if !packages["postinstall"].nil? && !packages["postinstall"].empty?
-    packages = packages["postinstall"].join(" ");
-    config.vm.provision "postinstall",
+  if !packages["postprovision"].nil? && !packages["postprovision"].empty?
+    packages = packages["postprovision"].join(" ");
+    config.vm.provision "postprovision",
      type: "shell",
      path: "provisioning/packages.sh",
      env: {"PACKAGES" => packages}

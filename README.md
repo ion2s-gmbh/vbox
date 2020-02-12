@@ -46,6 +46,23 @@ is redirected to https.
 The SSL files will not be versioned as this is generally not recommended for security
 reasons.
 
+### Additional OS packages installation
+You can install additional OS packages before and/or after the whole provisioning
+routine. This can be defined in box.yml, too.
+```yaml
+packages:
+  preprovision:
+    - unzip
+      htop
+  postprovision:
+    # - supervisor
+    #   tmux
+```
+This configuration will install unzip and htop before all other provisioning
+scripts are executed. There will be no installation of packages in the postprovision
+phase.
+
+### Provisioning
 In `box.yml` you can also configure which provisioning scripts should be executed:
 ```yaml
 provision:

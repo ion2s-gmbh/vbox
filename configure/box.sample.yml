@@ -22,10 +22,10 @@ OPEN_BROWSER: true
 #
 ########################################################################################################################
 packages:
-  preinstall:
+  preprovision:
     - unzip
-      # htop
-  postinstall:
+    # htop
+  postprovision:
     # - supervisor
     #   tmux
 
