@@ -36,7 +36,7 @@ OPEN_BROWSER: true
 ```
 
 ### SSL
-If SSL is enabled (`USE_SSL`) there will be to files created during provisioning:
+If SSL is enabled (`USE_SSL`) there will be two files created during provisioning:
 * vbox.cert
 * vbox.key
 The CN of the created certificate will match `SERVER_NAME`.  
