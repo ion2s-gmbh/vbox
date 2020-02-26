@@ -66,7 +66,7 @@ phase.
 In `box.yml` you can also configure which provisioning scripts should be executed:
 ```yaml
 provision:
-  - php: true
+    php: true
     nginx: true
     apache: false
     nvm: false
