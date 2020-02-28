@@ -83,7 +83,7 @@ Vagrant.configure("2") do |config|
   end
 
   if configure["USE_SSL"]
-    config.vm.provision "SSL", type: "shell", path: "provisioning/createSSLCert.sh", privileged: false, env: configure
+    config.vm.provision "SSL", type: "shell", path: "provisioning/createSSLCert.sh", env: configure
   end
 
   # Nginx
