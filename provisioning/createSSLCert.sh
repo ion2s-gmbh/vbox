@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-openssl genrsa -out /vagrant/files/vbox.key 2048 2> /dev/null
+CERTS_FOLDER=/var/certificates
 
-openssl req -new -x509 -key /vagrant/files/vbox.key \
- -out /vagrant/files/vbox.cert \
+mkdir ${CERTS_FOLDER}
+
+openssl genrsa -out ${CERTS_FOLDER}/vbox.key 2048 2> /dev/null
+
+openssl req -new -x509 -key ${CERTS_FOLDER}/vbox.key \
+ -out ${CERTS_FOLDER}/vbox.cert \
  -days 3650 -subj /CN=${SERVER_NAME} 2> /dev/null
 
 exit 0

@@ -15,8 +15,8 @@
 	DocumentRoot <%= vars['WEB_ROOT'] %>
 
 	SSLEngine on
-	SSLCertificateKeyFile /vagrant/files/vbox.key
-	SSLCertificateFile /vagrant/files/vbox.cert
+	SSLCertificateKeyFile /var/certificates/vbox.key
+	SSLCertificateFile /var/certificates/vbox.cert
 
 	#LogLevel info ssl:warn
 	ErrorLog ${APACHE_LOG_DIR}/error.log
