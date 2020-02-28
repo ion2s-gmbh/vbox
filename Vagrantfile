@@ -125,7 +125,6 @@ Vagrant.configure("2") do |config|
       config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
   end
 
-
   # Packes post install
   if !packages["postprovision"].nil? && !packages["postprovision"].empty?
     packages = packages["postprovision"].join(" ");
@@ -136,7 +135,7 @@ Vagrant.configure("2") do |config|
   end
 
   # Open default browser on host
-  if configure["provision"]["nginx"] && (configure["provision"]["nginx"] || configure["provision"]["apache"])
+  if configure["OPEN_BROWSER"] && (configure["provision"]["nginx"] || configure["provision"]["apache"])
     config.trigger.after [:up] do |trigger|
         trigger.name = "Up and running"
         trigger.info = "Vbox is up and running. Build something amazing."
