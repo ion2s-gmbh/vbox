@@ -79,10 +79,17 @@ Vagrant.configure("2") do |config|
   # PHP
   if configure["provision"]["php"]
       configure["php"]["versions"].each do |version|
+          if !configure["php"]["modules"].nil? && !configure["php"]["modules"].empty?
+              modules = Array.new
+              configure["php"]["modules"].each do |mod|
+                  modules.push("php#{version}-#{mod}")
+              end
+              mods = modules.join(" ")
+          end
         config.vm.provision "php-#{version}",
          type: "shell",
          path: "provisioning/php.sh",
-         env: {"PHP_VERSION" => version}
+         env: {"PHP_VERSION" => version, "PHP_MODULES" => mods}
       end
       config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
   end
@@ -98,7 +105,7 @@ Vagrant.configure("2") do |config|
 
   # Apache
   if configure["provision"]["apache"]
-      config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh"
+      config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh", env: {"PHP_VERSION" => configure["php"]["current"]}
   end
 
   # Node
