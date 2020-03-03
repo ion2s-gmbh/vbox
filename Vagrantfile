@@ -91,26 +91,39 @@ Vagrant.configure("2") do |config|
          path: "provisioning/php.sh",
          env: {"PHP_VERSION" => version, "PHP_MODULES" => mods}
       end
-      config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
+      config.vm.provision "composer",
+       type: "shell",
+       path: "provisioning/composer.sh"
   end
 
   if configure["USE_SSL"]
-    config.vm.provision "SSL", type: "shell", path: "provisioning/createSSLCert.sh", env: configure
+    config.vm.provision "SSL",
+     type: "shell",
+     path: "provisioning/createSSLCert.sh",
+     env: configure
   end
 
   # Nginx
   if configure["provision"]["nginx"]
-      config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
+      config.vm.provision "nginx",
+       type: "shell",
+       path: "provisioning/nginx.sh"
   end
 
   # Apache
   if configure["provision"]["apache"]
-      config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh", env: {"PHP_VERSION" => configure["php"]["current"]}
+      config.vm.provision "apache",
+       type: "shell",
+       path: "provisioning/apache.sh",
+       env: {"PHP_VERSION" => configure["php"]["current"]}
   end
 
   # Node
   if configure["provision"]["nvm"]
-      config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
+      config.vm.provision "nvm",
+       type: "shell",
+       path: "provisioning/nvm.sh",
+       privileged: false
   end
 
   # Databases
@@ -118,23 +131,36 @@ Vagrant.configure("2") do |config|
       if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
           config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
       end
-      config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh", env: configure["mysql"]
+      config.vm.provision "mysql",
+       type: "shell",
+       path: "provisioning/mysql.sh",
+       env: configure["mysql"]
   end
 
   # Docker
   if configure["provision"]["docker"]
-      config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
-      config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
+      config.vm.provision "docker",
+       type: "shell",
+       path: "provisioning/docker.sh"
+      config.vm.provision "docker-compose",
+       type: "shell",
+       path: "provisioning/docker-compose.sh"
   end
 
   # Welcome screen
   if configure["provision"]["welcome"]
-      config.vm.provision "welcome", type: "shell", path: "provisioning/welcome.sh", privileged: false
+      config.vm.provision "welcome",
+       type: "shell",
+       path: "provisioning/welcome.sh",
+       privileged: false
   end
 
   # Frameworks
   if configure["provision"]["frameworks"]
-      config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
+      config.vm.provision "frameworks",
+       type: "shell",
+       path: "provisioning/frameworks.sh",
+       privileged: false
   end
 
   # Packes post install
