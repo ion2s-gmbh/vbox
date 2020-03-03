@@ -78,7 +78,7 @@ Vagrant.configure("2") do |config|
 
   # PHP
   if configure["provision"]["php"]
-      config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
+      config.vm.provision "php-7.2", type: "shell", path: "provisioning/php.sh"
       config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
   end
 
