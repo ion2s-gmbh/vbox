@@ -1,28 +1,33 @@
 #!/usr/bin/env bash
 
+add-apt-repository ppa:ondrej/php
+apt-get update
+
+echo "Installing ${PHP_VERSION}..."
+
 apt-get install -y \
-php7.2-fpm \
-php7.2-cli \
-php7.2-common \
-php7.2-json \
-php7.2-mysql \
-php7.2-readline \
-php7.2-xml \
-php7.2-curl \
-php7.2-gd \
-php7.2-mbstring \
-php7.2-opcache \
-php7.2-sqlite3 \
-php7.2-zip \
-php7.2-intl
+php${PHP_VERSION}-fpm \
+php${PHP_VERSION}-cli \
+php${PHP_VERSION}-common \
+php${PHP_VERSION}-json \
+php${PHP_VERSION}-mysql \
+php${PHP_VERSION}-readline \
+php${PHP_VERSION}-xml \
+php${PHP_VERSION}-curl \
+php${PHP_VERSION}-gd \
+php${PHP_VERSION}-mbstring \
+php${PHP_VERSION}-opcache \
+php${PHP_VERSION}-sqlite3 \
+php${PHP_VERSION}-zip \
+php${PHP_VERSION}-intl
 
 apt-get install -y \
 php-xdebug
 
 # Copy configs
-cp /vagrant/provisioning/configs/php/xdebug.ini /etc/php/7.2/mods-available
+cp /vagrant/provisioning/configs/php/xdebug.ini /etc/php/${PHP_VERSION}/mods-available
 
 # Restart PHP
-service php7.2-fpm restart
+service php${PHP_VERSION}-fpm restart
 
 exit $?
