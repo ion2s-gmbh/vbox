@@ -101,7 +101,7 @@ and set the correct document root.
 ## Services
 * Nginx
 * Apache (alternative to Nginx)
-* PHP 7.2
+* PHP
 * Composer
 * NVM
   * Default NodeJS v12.14.1
@@ -109,6 +109,34 @@ and set the correct document root.
 * Docker
 * Docker-Compose
 * Mysql
+
+## PHP
+You can install different PHP versions at the same time.
+```yaml
+php:
+  current: 7.2
+  versions:
+    - 7.2
+    #- 7.3
+    - 7.4
+  modules:
+    - curl
+    - zip
+    - common
+    - json
+    - mysql
+    - readline
+    - xml
+    - gd
+    - mbstring
+    - opcache
+    - sqlite3
+    - intl
+```
+* `current` is the currently activated PHP version.
+* `versions` is a list of PHP versions that are installed.
+* `modules` contain all extra PHP modules that are installed.  
+By default the FPM, CLI and xdebug modules are installed.
 
 ## Databases
 Mysql settings and credentials are configured via `box.yml` as well:

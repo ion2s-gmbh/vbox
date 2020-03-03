@@ -46,6 +46,35 @@ provision:
 
 ########################################################################################################################
 #
+# PHP
+# Define installed PHP (fpm) versions, customize the current version of PHP and which PHP modules should be installed
+# for each version.
+#
+# Defaults: php{version}-fpm, php{version}-cli and php-xdebug
+#
+########################################################################################################################
+php:
+  current: 7.2
+  versions:
+    - 7.2
+    #- 7.3
+    - 7.4
+  modules:
+    - curl
+    - zip
+    - common
+    - json
+    - mysql
+    - readline
+    - xml
+    - gd
+    - mbstring
+    - opcache
+    - sqlite3
+    - intl
+
+########################################################################################################################
+#
 # Config variables for Mysql.
 # We strongly recommend to use different credentials in your test and prod environments.
 #
