@@ -54,7 +54,15 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: configure["BOX_IP"]
 
   # Shared folder
-  config.vm.synced_folder configure["HOST_SRC_FOLDER"], "/var/www/html", group: "www-data"
+  unless configure["folders"].nil?
+      configure["folders"].each do |folder|
+        owner = (folder["owner"].nil?) ? "vagrant" : folder["owner"]
+        group = (folder["group"].nil?) ? "vagrant" : folder["group"]
+        config.vm.synced_folder folder["host"], folder["guest"],
+         owner: owner,
+         group: group
+      end
+  end
 
   config.vm.provider "virtualbox" do |vb|
       # Give your box a name, that is displayed in the VirtualBox Manager
@@ -65,12 +73,12 @@ Vagrant.configure("2") do |config|
       vb.memory = configure["BOX_MEMORY"]
   end
 
-  # Packages preinstall
+  # Packages preprovision
   packages = configure["packages"]
   if !packages["preprovision"].nil? && !packages["preprovision"].empty?
     # Basic tools provisioning
     pkgs = packages["preprovision"].join(" ");
-    config.vm.provision "preprovsion",
+    config.vm.provision "preprovision",
      type: "shell",
      path: "provisioning/packages.sh",
      env: {"PACKAGES" => pkgs}

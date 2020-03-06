@@ -9,12 +9,27 @@ BOX_VERSION: "20200227.0.0"
 BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
-HOST_SRC_FOLDER: "./src"
 
 WEB_ROOT: /var/www/html
 SERVER_NAME: dev.box
 USE_SSL: true
 OPEN_BROWSER: true
+
+########################################################################################################################
+#
+# Define additional synced folders for the vagrant box.
+# - host: /path/on/host/system
+#   guest: /tmp/path/on/guest/system
+#   owner: root (optional, default: vagrant)
+#   group: root (optional, default: vagrant)
+#
+########################################################################################################################
+folders:
+  # Default web document root
+  - host: ./src
+    guest: /var/www/html
+    owner: www-data
+    group: www-data
 
 ########################################################################################################################
 #

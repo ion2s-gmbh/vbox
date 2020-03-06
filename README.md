@@ -27,12 +27,25 @@ BOX_VERSION: "20190726.0.0"
 BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
-HOST_SRC_FOLDER: "./src"
 
 WEB_ROOT: /var/www/html
 SERVER_NAME: dev.box
 USE_SSL: false
 OPEN_BROWSER: true
+```
+
+### Additional synced folders
+By default there is one folders synced to the vagrant box:
+* ./ => /vagrant
+
+If you want to sync additional folders, you can configure this in the`box.yml` file:
+```yaml
+folders:
+  # Default web document root
+  - host: ./src
+    guest: /var/www/html
+    owner: www-data
+    group: www-data
 ```
 
 ### SSL
