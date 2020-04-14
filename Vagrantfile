@@ -28,7 +28,7 @@ end
 ########################################################################################################################
 # Generate configs
 ########################################################################################################################
-vars = configure["templates"]
+vars = configure
 nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
 File.write("provisioning/templates/nginx/nginx-default.conf", nginxConf.result(binding))
 
@@ -54,7 +54,15 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: configure["BOX_IP"]
 
   # Shared folder
-  config.vm.synced_folder configure["HOST_SRC_FOLDER"], "/var/www/html", group: "www-data"
+  unless configure["folders"].nil?
+      configure["folders"].each do |folder|
+        owner = (folder["owner"].nil?) ? "vagrant" : folder["owner"]
+        group = (folder["group"].nil?) ? "vagrant" : folder["group"]
+        config.vm.synced_folder folder["host"], folder["guest"],
+         owner: owner,
+         group: group
+      end
+  end
 
   config.vm.provider "virtualbox" do |vb|
       # Give your box a name, that is displayed in the VirtualBox Manager
@@ -65,68 +73,124 @@ Vagrant.configure("2") do |config|
       vb.memory = configure["BOX_MEMORY"]
   end
 
-  # Basic tools provisioning
-  config.vm.provision "base", type: "shell", path: "provisioning/base.sh"
+  # Packages preprovision
+  packages = configure["packages"]
+  if !packages["preprovision"].nil? && !packages["preprovision"].empty?
+    # Basic tools provisioning
+    pkgs = packages["preprovision"].join(" ");
+    config.vm.provision "preprovision",
+     type: "shell",
+     path: "provisioning/packages.sh",
+     env: {"PACKAGES" => pkgs}
+  end
 
-  configure["provision"].each do |provision|
-
-      # PHP
-      if provision["php"]
-          config.vm.provision "php-7.2", type: "shell", path: "provisioning/php-72.sh"
-          config.vm.provision "composer", type: "shell", path: "provisioning/composer.sh"
-      end
-
-      # Nginx
-      if provision["nginx"]
-          config.vm.provision "nginx", type: "shell", path: "provisioning/nginx.sh"
-      end
-
-      # Apache
-      if provision["apache"]
-          config.vm.provision "apache", type: "shell", path: "provisioning/apache.sh"
-      end
-
-      # Node
-      if provision["nvm"]
-          config.vm.provision "nvm", type: "shell", path: "provisioning/nvm.sh", privileged: false
-      end
-
-      # Databases
-      if provision["mysql"]
-          if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
-              config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
+  # PHP
+  if configure["provision"]["php"]
+      configure["php"]["versions"].each do |version|
+          if !configure["php"]["modules"].nil? && !configure["php"]["modules"].empty?
+              modules = Array.new
+              configure["php"]["modules"].each do |mod|
+                  modules.push("php#{version}-#{mod}")
+              end
+              mods = modules.join(" ")
           end
-          config.vm.provision "mysql", type: "shell", path: "provisioning/mysql.sh", env: configure["mysql"]
+        config.vm.provision "php-#{version}",
+         type: "shell",
+         path: "provisioning/php.sh",
+         env: {"PHP_VERSION" => version, "PHP_MODULES" => mods}
       end
+      config.vm.provision "composer",
+       type: "shell",
+       path: "provisioning/composer.sh"
+  end
 
-      # Docker
-      if provision["docker"]
-          config.vm.provision "docker", type: "shell", path: "provisioning/docker.sh"
-          config.vm.provision "docker-compose", type: "shell", path: "provisioning/docker-compose.sh"
-      end
+  if configure["USE_SSL"]
+    config.vm.provision "SSL",
+     type: "shell",
+     path: "provisioning/createSSLCert.sh",
+     env: configure
+  end
 
-      # Welcome screen
-      if provision["welcome"]
-          config.vm.provision "welcome", type: "shell", path: "provisioning/welcome.sh", privileged: false
-      end
+  # Nginx
+  if configure["provision"]["nginx"]
+      config.vm.provision "nginx",
+       type: "shell",
+       path: "provisioning/nginx.sh"
+  end
 
-      # Frameworks
-      if provision["frameworks"]
-          config.vm.provision "frameworks", type: "shell", path: "provisioning/frameworks.sh", privileged: false
+  # Apache
+  if configure["provision"]["apache"]
+      config.vm.provision "apache",
+       type: "shell",
+       path: "provisioning/apache.sh",
+       env: {"PHP_VERSION" => configure["php"]["current"]}
+  end
+
+  # Node
+  if configure["provision"]["nvm"]
+      config.vm.provision "nvm",
+       type: "shell",
+       path: "provisioning/nvm.sh",
+       privileged: false
+  end
+
+  # Databases
+  if configure["provision"]["mysql"]
+      if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
+          config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
       end
+      config.vm.provision "mysql",
+       type: "shell",
+       path: "provisioning/mysql.sh",
+       env: configure["mysql"]
+  end
+
+  # Docker
+  if configure["provision"]["docker"]
+      config.vm.provision "docker",
+       type: "shell",
+       path: "provisioning/docker.sh"
+      config.vm.provision "docker-compose",
+       type: "shell",
+       path: "provisioning/docker-compose.sh"
+  end
+
+  # Welcome screen
+  if configure["provision"]["welcome"]
+      config.vm.provision "welcome",
+       type: "shell",
+       path: "provisioning/welcome.sh",
+       privileged: false
+  end
+
+  # Frameworks
+  if configure["provision"]["frameworks"]
+      config.vm.provision "frameworks",
+       type: "shell",
+       path: "provisioning/frameworks.sh",
+       privileged: false
+  end
+
+  # Packes post install
+  if !packages["postprovision"].nil? && !packages["postprovision"].empty?
+    packages = packages["postprovision"].join(" ");
+    config.vm.provision "postprovision",
+     type: "shell",
+     path: "provisioning/packages.sh",
+     env: {"PACKAGES" => packages}
+  end
+
+  # Open default browser on host
+  if configure["OPEN_BROWSER"] && (configure["provision"]["nginx"] || configure["provision"]["apache"])
+    config.trigger.after [:up] do |trigger|
+        trigger.name = "Up and running"
+        trigger.info = "Vbox is up and running. Build something amazing."
+        if Vagrant::Util::Platform.linux?
+          trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
+        end
+        if Vagrant::Util::Platform.windows?
+          trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
+        end
     end
-
-    # Open default browser on host
-    if configure["OPEN_BROWSER"]
-      config.trigger.after [:up] do |trigger|
-          trigger.name = "Up and running"
-          trigger.info = "Vbox is up and running. Build something amazing."
-          if Vagrant::Util::Platform.linux?
-            trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
-          end
-          if Vagrant::Util::Platform.windows?
-            trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
-          end
-      end
-    end
+  end
 end
