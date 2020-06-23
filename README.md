@@ -87,6 +87,7 @@ provision:
     docker: false
     welcome: true
     frameworks: false
+    memcached: false
 ```
 
 ### Frameworks
@@ -122,6 +123,7 @@ and set the correct document root.
 * Docker
 * Docker-Compose
 * Mysql
+* Memcached
 
 ## PHP
 You can install different PHP versions at the same time.

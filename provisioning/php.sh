@@ -8,7 +8,8 @@ echo "Installing ${PHP_VERSION}..."
 apt-get install -y \
 php${PHP_VERSION}-fpm \
 php${PHP_VERSION}-cli \
-php-xdebug
+php-xdebug \
+php-memcached
 
 apt-get install -y \
 ${PHP_MODULES}
