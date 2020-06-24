@@ -55,10 +55,11 @@ provision:
   apache: false
   nvm: false
   mysql: true
+  memcached: false
+  redis: false
   docker: false
   welcome: true
   frameworks: true
-  memcached: false
   custom: false
 
 ########################################################################################################################

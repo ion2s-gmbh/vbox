@@ -81,13 +81,14 @@ In `box.yml` you can also configure which provisioning scripts should be execute
 provision:
   php: true
   nginx: true
-  pache: false
-  vm: false
-  ysql: true
-  ocker: false
-  elcome: true
-  rameworks: false
+  apache: false
+  nvm: false
+  mysql: true
   memcached: false
+  redis: false
+  docker: false
+  welcome: true
+  frameworks: false
   custom: false
 ```
 
