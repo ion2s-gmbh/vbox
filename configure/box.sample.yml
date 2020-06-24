@@ -59,6 +59,29 @@ provision:
   welcome: true
   frameworks: true
   memcached: false
+  custom: true
+
+########################################################################################################################
+#
+# Here you can define additional shell scripts for provioning.
+# - name: A unique name (required)
+# - path: Relative path to Vagrantfile where the script is located. (required)
+# - provileged: Run the script with root privileges (optional; default: true)
+# - env: Envirionment variables that can be accessed in the script. (optional)
+#
+# NOTE: provision:custom has to be set to 'true'
+#
+########################################################################################################################
+custom:
+  scripts:
+    - name: script-1
+      path: path-to/touch.sh
+      privileged: false
+      env:
+        KEY1: value1
+        KEY2: value2
+    - name: script-2
+      path: path-to/touch2.sh
 
 ########################################################################################################################
 #

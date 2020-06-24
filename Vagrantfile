@@ -178,6 +178,17 @@ Vagrant.configure("2") do |config|
        path: "provisioning/memcached.sh"
   end
 
+  # Custom
+  if configure["provision"]["custom"]
+    configure["custom"]["scripts"].each do |script|
+      config.vm.provision script["name"],
+       type: "shell",
+       path: script["path"],
+       privileged: script["privileged"] || true,
+       env: script["env"] || {}
+    end
+  end
+
   # Packes post install
   if !packages["postprovision"].nil? && !packages["postprovision"].empty?
     packages = packages["postprovision"].join(" ");
