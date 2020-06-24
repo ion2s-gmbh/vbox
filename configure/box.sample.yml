@@ -59,7 +59,7 @@ provision:
   welcome: true
   frameworks: true
   memcached: false
-  custom: true
+  custom: false
 
 ########################################################################################################################
 #
