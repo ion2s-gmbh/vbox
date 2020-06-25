@@ -27,6 +27,9 @@ BOX_VERSION: "20190726.0.0"
 BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
+BOX_CHECK_UPDATES: false
+PLUGINS:
+  - vagrant-vbguest
 
 WEB_ROOT: /var/www/html
 SERVER_NAME: dev.box

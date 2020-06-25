@@ -39,11 +39,14 @@ File.write("provisioning/templates/apache/000-default.conf", apacheConf.result(b
 # Vagrant provisioning
 ########################################################################################################################
 Vagrant.configure("2") do |config|
+
+  config.vagrant.plugins = configure["PLUGINS"] || []
+
   config.vm.box = configure["BOX_BASE"]
 
   # Fix the version and disable check of updates
   config.vm.box_version = configure["BOX_VERSION"]
-  config.vm.box_check_update = false
+  config.vm.box_check_update = configure["BOX_CHECK_UPDATES"] || false
 
   # Give your box a name, that is displayed in the commandline and in
   # the VirtualBox"s bash.
