@@ -100,7 +100,11 @@ Vagrant.configure("2") do |config|
         config.vm.provision "php-#{version}",
          type: "shell",
          path: "provisioning/php.sh",
-         env: {"PHP_VERSION" => version, "PHP_MODULES" => mods}
+         env: {
+           "PHP_VERSION" => version,
+           "PHP_MODULES" => mods,
+           "PHP_CURRENT" => configure["php"]["current"]
+         }
       end
       config.vm.provision "composer",
        type: "shell",
