@@ -24,7 +24,10 @@ php composer-setup.php \
 RESULT=$?
 rm composer-setup.php
 
-ln -s ${INSTALL_DIR}/${FILENAME} /usr/local/bin/${FILENAME}
+if [ ! -L "/usr/local/bin/${FILENAME}" ]; then
+  echo "Creating symlink for composer..."
+  ln -s ${INSTALL_DIR}/${FILENAME} /usr/local/bin/${FILENAME}
+fi
 
 USER_HOME=/home/vagrant
 

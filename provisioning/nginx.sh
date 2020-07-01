@@ -8,7 +8,10 @@ adduser vagrant www-data
 cp /vagrant/provisioning/templates/nginx/nginx-default.conf /etc/nginx/sites-available/default
 
 # Remove the default index page of nginx
-rm /var/www/html/index.nginx-debian.html
+if [ -f "/var/www/html/index.nginx-debian.html" ]; then
+  echo "Removing nginx default page..."
+  rm /var/www/html/index.nginx-debian.html
+fi
 
 # Nginx config test
 service nginx configtest
