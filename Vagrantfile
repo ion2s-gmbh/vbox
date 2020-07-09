@@ -105,6 +105,15 @@ Vagrant.configure("2") do |config|
            "PHP_MODULES" => mods,
            "PHP_CURRENT" => configure["php"]["current"]
          }
+
+         if configure["php"]["ioncube"]
+           config.vm.provision "ioncube-#{version}",
+           type: "shell",
+           path: "provisioning/ioncube.sh",
+           env: {
+             "PHP_VERSION" => version
+           }
+         end
       end
       config.vm.provision "composer",
        type: "shell",
