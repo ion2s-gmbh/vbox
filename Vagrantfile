@@ -39,11 +39,14 @@ File.write("provisioning/templates/apache/000-default.conf", apacheConf.result(b
 # Vagrant provisioning
 ########################################################################################################################
 Vagrant.configure("2") do |config|
+
+  config.vagrant.plugins = configure["PLUGINS"] || []
+
   config.vm.box = configure["BOX_BASE"]
 
   # Fix the version and disable check of updates
   config.vm.box_version = configure["BOX_VERSION"]
-  config.vm.box_check_update = false
+  config.vm.box_check_update = configure["BOX_CHECK_UPDATES"] || false
 
   # Give your box a name, that is displayed in the commandline and in
   # the VirtualBox"s bash.
@@ -97,7 +100,20 @@ Vagrant.configure("2") do |config|
         config.vm.provision "php-#{version}",
          type: "shell",
          path: "provisioning/php.sh",
-         env: {"PHP_VERSION" => version, "PHP_MODULES" => mods}
+         env: {
+           "PHP_VERSION" => version,
+           "PHP_MODULES" => mods,
+           "PHP_CURRENT" => configure["php"]["current"]
+         }
+
+         if configure["php"]["ioncube"]
+           config.vm.provision "ioncube-#{version}",
+           type: "shell",
+           path: "provisioning/ioncube.sh",
+           env: {
+             "PHP_VERSION" => version
+           }
+         end
       end
       config.vm.provision "composer",
        type: "shell",
@@ -134,7 +150,7 @@ Vagrant.configure("2") do |config|
        privileged: false
   end
 
-  # Databases
+  # Mysql
   if configure["provision"]["mysql"]
       if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
           config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
@@ -143,6 +159,20 @@ Vagrant.configure("2") do |config|
        type: "shell",
        path: "provisioning/mysql.sh",
        env: configure["mysql"]
+  end
+
+  # Memcached
+  if configure["provision"]["memcached"]
+      config.vm.provision "memcached",
+       type: "shell",
+       path: "provisioning/memcached.sh"
+  end
+
+  # Redis
+  if configure["provision"]["redis"]
+      config.vm.provision "redis",
+       type: "shell",
+       path: "provisioning/redis.sh"
   end
 
   # Docker
@@ -169,6 +199,17 @@ Vagrant.configure("2") do |config|
        type: "shell",
        path: "provisioning/frameworks.sh",
        privileged: false
+  end
+
+  # Custom
+  if configure["provision"]["custom"]
+    configure["custom"]["scripts"].each do |script|
+      config.vm.provision script["name"],
+       type: "shell",
+       path: script["path"],
+       privileged: script["privileged"] || true,
+       env: script["env"] || {}
+    end
   end
 
   # Packes post install

@@ -7,12 +7,15 @@ BOX_BASE: "ubuntu/bionic64"
 BOX_NAME: "vbox-dev"
 BOX_VERSION: "20200227.0.0"
 BOX_IP: "10.0.0.42"
-BOX_CPU: 2
-BOX_MEMORY: 4096
+BOX_CPU: 1
+BOX_MEMORY: 2048
+BOX_CHECK_UPDATES: false
+PLUGINS:
+  #- vagrant-vbguest
 
 WEB_ROOT: /var/www/html
 SERVER_NAME: dev.box
-USE_SSL: true
+USE_SSL: false
 OPEN_BROWSER: true
 
 ########################################################################################################################
@@ -54,10 +57,35 @@ provision:
   nginx: true
   apache: false
   nvm: false
-  mysql: true
+  mysql: false
+  memcached: false
+  redis: false
   docker: false
   welcome: true
   frameworks: true
+  custom: false
+
+########################################################################################################################
+#
+# Here you can define additional shell scripts for provioning.
+# - name: A unique name (required)
+# - path: Relative path to Vagrantfile where the script is located. (required)
+# - provileged: Run the script with root privileges (optional; default: true)
+# - env: Envirionment variables that can be accessed in the script. (optional)
+#
+# NOTE: provision:custom has to be set to 'true'
+#
+########################################################################################################################
+custom:
+  scripts:
+    - name: script-1
+      path: path-to/touch.sh
+      privileged: false
+      env:
+        KEY1: value1
+        KEY2: value2
+    - name: script-2
+      path: path-to/touch2.sh
 
 ########################################################################################################################
 #
@@ -73,7 +101,7 @@ php:
   versions:
     - 7.2
     #- 7.3
-    - 7.4
+    # - 7.4
   modules:
     - curl
     - zip
@@ -87,6 +115,7 @@ php:
     - opcache
     - sqlite3
     - intl
+  ioncube: false
 
 ########################################################################################################################
 #

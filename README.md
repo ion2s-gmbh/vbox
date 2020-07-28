@@ -27,6 +27,9 @@ BOX_VERSION: "20190726.0.0"
 BOX_IP: "10.0.0.42"
 BOX_CPU: 2
 BOX_MEMORY: 4096
+BOX_CHECK_UPDATES: false
+PLUGINS:
+  - vagrant-vbguest
 
 WEB_ROOT: /var/www/html
 SERVER_NAME: dev.box
@@ -79,15 +82,48 @@ phase.
 In `box.yml` you can also configure which provisioning scripts should be executed:
 ```yaml
 provision:
-    php: true
-    nginx: true
-    apache: false
-    nvm: false
-    mysql: true
-    docker: false
-    welcome: true
-    frameworks: false
+  php: true
+  nginx: true
+  apache: false
+  nvm: false
+  mysql: true
+  memcached: false
+  redis: false
+  docker: false
+  welcome: true
+  frameworks: false
+  custom: false
 ```
+
+### Additional custom provisioning scripts
+If you need more provisioning for tools, that are currently not supported,
+you can add your own provisioning scripts.
+First of all enable custom provisioning:
+
+```yaml
+provision:
+  [...]
+  custom: true
+```
+
+Then you can configure you own scripts:
+```yaml
+custom:
+  scripts:
+    - name: script-1
+      path: path-to/touch.sh
+      privileged: false
+      env:
+        KEY1: value1
+        KEY2: value2
+    - name: script-2
+      path: path-to/touch2.sh
+```
+
+- name: A unique name (required)
+- path: Relative path to Vagrantfile where the script is located. (required)
+- provileged: Run the script with root privileges (optional; default: true)
+- env: Envirionment variables that can be accessed in the script. (optional)
 
 ### Frameworks
 If activated the following framework installers will be available:
@@ -122,6 +158,7 @@ and set the correct document root.
 * Docker
 * Docker-Compose
 * Mysql
+* Memcached
 
 ## PHP
 You can install different PHP versions at the same time.
