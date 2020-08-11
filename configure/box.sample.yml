@@ -42,10 +42,10 @@ folders:
 packages:
   preprovision:
     - unzip
-    # htop
+    # - htop
   postprovision:
     # - supervisor
-    #   tmux
+    # - tmux
 
 ########################################################################################################################
 #
