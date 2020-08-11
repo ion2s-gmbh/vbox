@@ -3,3 +3,4 @@
 *.log
 **/index.nginx-debian.html
 configure/box.yml
+extra

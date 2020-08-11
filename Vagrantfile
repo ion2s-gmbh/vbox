@@ -76,6 +76,14 @@ Vagrant.configure("2") do |config|
       vb.memory = configure["BOX_MEMORY"]
   end
 
+  # Add extra ca certificates to the box
+  if !configure["extra_certificates"].nil? && !configure["extra_certificates"].empty?
+    config.vm.provision "file", source: configure["extra_certificates"], destination: "/home/vagrant/extra"
+    config.vm.provision "add-cas",
+     type: "shell",
+     path: "provisioning/add-cas.sh"
+  end
+
   # Packages preprovision
   packages = configure["packages"]
   if !packages["preprovision"].nil? && !packages["preprovision"].empty?

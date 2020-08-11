@@ -18,6 +18,10 @@ SERVER_NAME: dev.box
 USE_SSL: false
 OPEN_BROWSER: true
 
+
+extra_certificates:
+
+
 ########################################################################################################################
 #
 # Define additional synced folders for the vagrant box.
