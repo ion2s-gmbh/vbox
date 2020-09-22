@@ -1,6 +1,10 @@
 require "yaml"
 require "erb"
 
+# Get and print version information
+VBOX_VERSION = File.read("version.txt")
+puts "Vbox #{VBOX_VERSION}"
+
 ########################################################################################################################
 # Load the box configuration
 #
