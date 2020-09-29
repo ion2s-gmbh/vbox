@@ -23,7 +23,7 @@ WantedBy=multi-user.target
 EOT
 
 # Add MailHog to autorun
-update-rc.d mailhog defaults
+systemctl enable mailhog.service
 
 # Start MailHog service
 service mailhog start
