@@ -66,6 +66,7 @@ provision:
   apache: false
   nvm: false
   mysql: false
+  mailhog: false
   memcached: false
   redis: false
   docker: false

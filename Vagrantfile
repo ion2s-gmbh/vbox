@@ -173,6 +173,13 @@ Vagrant.configure("2") do |config|
        env: configure["mysql"]
   end
 
+  # MailHog
+  if configure["provision"]["mailhog"]
+      config.vm.provision "mailhog",
+       type: "shell",
+       path: "provisioning/mailhog.sh"
+  end
+
   # Memcached
   if configure["provision"]["memcached"]
       config.vm.provision "memcached",
@@ -224,7 +231,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # Packes post install
+  # Packages post install
   if !packages["postprovision"].nil? && !packages["postprovision"].empty?
     packages = packages["postprovision"].join(" ");
     config.vm.provision "postprovision",
