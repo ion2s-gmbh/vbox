@@ -60,24 +60,33 @@ Vagrant.configure("2") do |config|
   # Assign private IP address for the box
   config.vm.network "private_network", ip: configure["BOX_IP"]
 
+  # Port forwarding
+  if !configure["ports"].nil?
+    configure["ports"].each do |port|
+      config.vm.network "forwarded_port",
+       guest: port["box"],
+       host: port["localhost"]
+    end
+  end
+
   # Shared folder
   unless configure["folders"].nil?
-      configure["folders"].each do |folder|
-        owner = (folder["owner"].nil?) ? "vagrant" : folder["owner"]
-        group = (folder["group"].nil?) ? "vagrant" : folder["group"]
-        config.vm.synced_folder folder["host"], folder["guest"],
-         owner: owner,
-         group: group
-      end
+    configure["folders"].each do |folder|
+      owner = (folder["owner"].nil?) ? "vagrant" : folder["owner"]
+      group = (folder["group"].nil?) ? "vagrant" : folder["group"]
+      config.vm.synced_folder folder["host"], folder["guest"],
+       owner: owner,
+       group: group
+    end
   end
 
   config.vm.provider "virtualbox" do |vb|
-      # Give your box a name, that is displayed in the VirtualBox Manager
-      vb.name = configure["BOX_NAME"]
+    # Give your box a name, that is displayed in the VirtualBox Manager
+    vb.name = configure["BOX_NAME"]
 
-      # Allocate CPU and memory
-      vb.cpus = configure["BOX_CPU"]
-      vb.memory = configure["BOX_MEMORY"]
+    # Allocate CPU and memory
+    vb.cpus = configure["BOX_CPU"]
+    vb.memory = configure["BOX_MEMORY"]
   end
 
   # Add extra ca certificates to the box
@@ -101,35 +110,35 @@ Vagrant.configure("2") do |config|
 
   # PHP
   if configure["provision"]["php"]
-      configure["php"]["versions"].each do |version|
-          if !configure["php"]["modules"].nil? && !configure["php"]["modules"].empty?
-              modules = Array.new
-              configure["php"]["modules"].each do |mod|
-                  modules.push("php#{version}-#{mod}")
-              end
-              mods = modules.join(" ")
-          end
-        config.vm.provision "php-#{version}",
-         type: "shell",
-         path: "provisioning/php.sh",
-         env: {
-           "PHP_VERSION" => version,
-           "PHP_MODULES" => mods,
-           "PHP_CURRENT" => configure["php"]["current"]
-         }
-
-         if configure["php"]["ioncube"]
-           config.vm.provision "ioncube-#{version}",
-           type: "shell",
-           path: "provisioning/ioncube.sh",
-           env: {
-             "PHP_VERSION" => version
-           }
-         end
-      end
-      config.vm.provision "composer",
+    configure["php"]["versions"].each do |version|
+        if !configure["php"]["modules"].nil? && !configure["php"]["modules"].empty?
+            modules = Array.new
+            configure["php"]["modules"].each do |mod|
+                modules.push("php#{version}-#{mod}")
+            end
+            mods = modules.join(" ")
+        end
+      config.vm.provision "php-#{version}",
        type: "shell",
-       path: "provisioning/composer.sh"
+       path: "provisioning/php.sh",
+       env: {
+         "PHP_VERSION" => version,
+         "PHP_MODULES" => mods,
+         "PHP_CURRENT" => configure["php"]["current"]
+       }
+
+       if configure["php"]["ioncube"]
+         config.vm.provision "ioncube-#{version}",
+         type: "shell",
+         path: "provisioning/ioncube.sh",
+         env: {
+           "PHP_VERSION" => version
+         }
+       end
+    end
+    config.vm.provision "composer",
+     type: "shell",
+     path: "provisioning/composer.sh"
   end
 
   if configure["USE_SSL"]
@@ -141,83 +150,83 @@ Vagrant.configure("2") do |config|
 
   # Nginx
   if configure["provision"]["nginx"]
-      config.vm.provision "nginx",
-       type: "shell",
-       path: "provisioning/nginx.sh"
+    config.vm.provision "nginx",
+     type: "shell",
+     path: "provisioning/nginx.sh"
   end
 
   # Apache
   if configure["provision"]["apache"]
-      config.vm.provision "apache",
-       type: "shell",
-       path: "provisioning/apache.sh",
-       env: {"PHP_VERSION" => configure["php"]["current"]}
+    config.vm.provision "apache",
+     type: "shell",
+     path: "provisioning/apache.sh",
+     env: {"PHP_VERSION" => configure["php"]["current"]}
   end
 
   # Node
   if configure["provision"]["nvm"]
-      config.vm.provision "nvm",
-       type: "shell",
-       path: "provisioning/nvm.sh",
-       privileged: false
+    config.vm.provision "nvm",
+     type: "shell",
+     path: "provisioning/nvm.sh",
+     privileged: false
   end
 
   # Mysql
   if configure["provision"]["mysql"]
-      if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
-          config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
-      end
-      config.vm.provision "mysql",
-       type: "shell",
-       path: "provisioning/mysql.sh",
-       env: configure["mysql"]
+    if !configure["mysql"]["MYSQL_MIGRATION_FILE"].nil? && File.exist?(configure["mysql"]["MYSQL_MIGRATION_FILE"])
+        config.vm.provision "file", source: configure["mysql"]["MYSQL_MIGRATION_FILE"], destination: "/tmp/mysql/migration.sql"
+    end
+    config.vm.provision "mysql",
+     type: "shell",
+     path: "provisioning/mysql.sh",
+     env: configure["mysql"]
   end
 
   # MailHog
   if configure["provision"]["mailhog"]
-      config.vm.provision "mailhog",
-       type: "shell",
-       path: "provisioning/mailhog.sh"
+    config.vm.provision "mailhog",
+     type: "shell",
+     path: "provisioning/mailhog.sh"
   end
 
   # Memcached
   if configure["provision"]["memcached"]
-      config.vm.provision "memcached",
-       type: "shell",
-       path: "provisioning/memcached.sh"
+    config.vm.provision "memcached",
+     type: "shell",
+     path: "provisioning/memcached.sh"
   end
 
   # Redis
   if configure["provision"]["redis"]
-      config.vm.provision "redis",
-       type: "shell",
-       path: "provisioning/redis.sh"
+    config.vm.provision "redis",
+     type: "shell",
+     path: "provisioning/redis.sh"
   end
 
   # Docker
   if configure["provision"]["docker"]
-      config.vm.provision "docker",
-       type: "shell",
-       path: "provisioning/docker.sh"
-      config.vm.provision "docker-compose",
-       type: "shell",
-       path: "provisioning/docker-compose.sh"
+    config.vm.provision "docker",
+     type: "shell",
+     path: "provisioning/docker.sh"
+    config.vm.provision "docker-compose",
+     type: "shell",
+     path: "provisioning/docker-compose.sh"
   end
 
   # Welcome screen
   if configure["provision"]["welcome"]
-      config.vm.provision "welcome",
-       type: "shell",
-       path: "provisioning/welcome.sh",
-       privileged: false
+    config.vm.provision "welcome",
+     type: "shell",
+     path: "provisioning/welcome.sh",
+     privileged: false
   end
 
   # Frameworks
   if configure["provision"]["frameworks"]
-      config.vm.provision "frameworks",
-       type: "shell",
-       path: "provisioning/frameworks.sh",
-       privileged: false
+    config.vm.provision "frameworks",
+     type: "shell",
+     path: "provisioning/frameworks.sh",
+     privileged: false
   end
 
   # Custom
@@ -243,14 +252,15 @@ Vagrant.configure("2") do |config|
   # Open default browser on host
   if configure["OPEN_BROWSER"] && (configure["provision"]["nginx"] || configure["provision"]["apache"])
     config.trigger.after [:up] do |trigger|
-        trigger.name = "Up and running"
-        trigger.info = "Vbox is up and running. Build something amazing."
-        if Vagrant::Util::Platform.linux?
-          trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
-        end
-        if Vagrant::Util::Platform.windows?
-          trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
-        end
+
+      trigger.name = "Up and running"
+      trigger.info = "Vbox is up and running. Build something amazing."
+      if Vagrant::Util::Platform.linux?
+        trigger.run = {inline: "xdg-open http://#{configure['BOX_IP']}"}
+      end
+      if Vagrant::Util::Platform.windows?
+        trigger.run = {inline: "start http://#{configure['BOX_IP']}"}
+      end
     end
   end
 end
