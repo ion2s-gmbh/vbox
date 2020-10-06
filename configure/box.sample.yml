@@ -28,6 +28,19 @@ extra_certificates:
 
 ########################################################################################################################
 #
+# Define additional ports that should be forwarded from the host to the gues
+# system.
+# Default: empty
+#
+########################################################################################################################
+ports:
+  # - localhost: 8080
+  #   box: 80
+  # - localhost: 8088
+  #   box: 8080
+
+########################################################################################################################
+#
 # Define additional synced folders for the vagrant box.
 # - host: /path/on/host/system
 #   guest: /tmp/path/on/guest/system
