@@ -6,7 +6,7 @@
 BOX_BASE: "ubuntu/bionic64"
 BOX_NAME: "vbox-dev"
 BOX_VERSION: "20200227.0.0"
-BOX_IP: "10.0.0.1"
+BOX_IP: "10.0.0.101"
 BOX_CPU: 1
 BOX_MEMORY: 2048
 BOX_CHECK_UPDATES: false
