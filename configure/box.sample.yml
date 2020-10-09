@@ -146,7 +146,7 @@ php:
 #
 # Use '*' in versions array to install the latest version.
 # Use 'lts/*' in vesions array to install the latest lts version.
-# use stable as current version to use the latest version.
+# Use node as current version to use the latest version.
 #
 ########################################################################################################################
 node:
