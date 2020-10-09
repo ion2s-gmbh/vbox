@@ -101,11 +101,10 @@ Vagrant.configure("2") do |config|
   packages = configure["packages"]
   if !packages["preprovision"].nil? && !packages["preprovision"].empty?
     # Basic tools provisioning
-    pkgs = packages["preprovision"].join(" ");
     config.vm.provision "preprovision",
      type: "shell",
      path: "provisioning/packages.sh",
-     env: {"PACKAGES" => pkgs}
+     env: {"PACKAGES" => packages["preprovision"].join(" ")}
   end
 
   # PHP
@@ -165,9 +164,15 @@ Vagrant.configure("2") do |config|
 
   # Node
   if configure["provision"]["nvm"]
+    node_versions = configure["node"] ? configure["node"]["versions"].join(" ") : 'lts/erbium'
+    current_version = configure["node"] ? configure["node"]["current"] : 'lts/erbium'
     config.vm.provision "nvm",
      type: "shell",
      path: "provisioning/nvm.sh",
+     env: {
+       "versions_string" => node_versions,
+       "current" => current_version
+     },
      privileged: false
   end
 
@@ -242,11 +247,10 @@ Vagrant.configure("2") do |config|
 
   # Packages post install
   if !packages["postprovision"].nil? && !packages["postprovision"].empty?
-    packages = packages["postprovision"].join(" ");
     config.vm.provision "postprovision",
      type: "shell",
      path: "provisioning/packages.sh",
-     env: {"PACKAGES" => packages}
+     env: {"PACKAGES" => packages["postprovision"].join(" ")}
   end
 
   # Open default browser on host

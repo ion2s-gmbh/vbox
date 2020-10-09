@@ -115,7 +115,7 @@ custom:
 # Define installed PHP (fpm) versions, customize the current version of PHP and which PHP modules should be installed
 # for each version.
 #
-# Defaults: php{version}-fpm, php{version}-cli and php-xdebug
+# Defaults: php{version}-fpm, php{version}-cli, php-xdebug, php-memcached and php-redis
 #
 ########################################################################################################################
 php:
@@ -138,6 +138,22 @@ php:
     - sqlite3
     - intl
   ioncube: false
+
+########################################################################################################################
+#
+# NODE
+# Define installed NODE versions and choose the current aka default version of NODE.
+#
+# Use '*' in versions array to install the latest version.
+# Use 'lts/*' in vesions array to install the latest lts version.
+# use stable as current version to use the latest version.
+#
+########################################################################################################################
+node:
+  current: lts/erbium
+  versions:
+    - lts/erbium
+    # - '*' # -> latest version
 
 ########################################################################################################################
 #
