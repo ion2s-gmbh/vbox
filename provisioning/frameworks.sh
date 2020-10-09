@@ -11,6 +11,8 @@ fi
 composer global require laravel/lumen-installer
 composer global require laravel/installer
 
+echo "alias art='php artisan'" >> /home/vagrant/.bash_aliases
+
 # Yii PHP Framework
 mkdir -p $HOME/framework-installers
 cp /vagrant/provisioning/scripts/yii-installer.sh $HOME/framework-installers/
