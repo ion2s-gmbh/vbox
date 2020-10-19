@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+mkdir -p $HOME/framework-installers
+
 # Composer is required to install framework installers
 composer -V
 if [ $? -eq 127 ]; then
@@ -13,11 +15,11 @@ composer global require laravel/installer
 
 echo "alias art='php artisan'" >> /home/vagrant/.bash_aliases
 
-# Yii PHP Framework
-mkdir -p $HOME/framework-installers
-cp /vagrant/provisioning/scripts/yii-installer.sh $HOME/framework-installers/
-chmod +x $HOME
+# Yii & Laminas PHP Framework
+cp /vagrant/provisioning/scripts/frameworks/* $HOME/framework-installers/
+chmod +x $HOME/framework-installers/ -R
 sudo ln -s /home/vagrant/framework-installers/yii-installer.sh /usr/local/bin/yii-create
+sudo ln -s /home/vagrant/framework-installers/laminas-installer.sh /usr/local/bin/laminas-create
 
 # Symfony Framework
 wget https://get.symfony.com/cli/installer -O - | bash
