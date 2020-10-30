@@ -3,7 +3,7 @@ require "erb"
 
 # Get and print version information
 VBOX_VERSION = File.read("VERSION")
-puts "Vbox #{VBOX_VERSION}"
+puts "-> Vbox #{VBOX_VERSION}"
 
 ########################################################################################################################
 # Load the box configuration
@@ -24,10 +24,28 @@ if (configPath.nil?)
 end
 
 configure = YAML.load_file(configPath)
-puts "Used box configuration: #{configPath}"
+puts "-> Used box configuration: #{configPath}"
 
 ########################################################################################################################
-# Generate configs
+# Override box configuration with individual per developer configuratins.
+########################################################################################################################
+externalOverride = File.join(__dir__, "..", "box.override.yml")
+internalOverride = File.join(__dir__, "box.override.yml")
+nestedOverride = File.join(__dir__, "configure", "box.override.yml")
+overridePath = nestedOverride if (File.exist?(nestedOverride))
+overridePath = internalOverride if (File.exist?(internalOverride))
+overridePath = externalOverride if (File.exist?(externalOverride))
+
+if (overridePath.nil?)
+  puts "-> No override of box.yml is provided."
+else
+  configOverrides = YAML.load_file(overridePath)
+  configure.merge!(configOverrides)
+  puts "-> Overriding box.yml configuration with values from #{overridePath}."
+end
+
+########################################################################################################################
+# Generate webserver configs
 ########################################################################################################################
 vars = configure
 nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")

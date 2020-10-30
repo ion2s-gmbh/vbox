@@ -3,4 +3,5 @@
 *.log
 **/index.nginx-debian.html
 configure/box.yml
+**/box.override.yml
 extra
