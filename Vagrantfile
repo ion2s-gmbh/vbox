@@ -16,18 +16,15 @@ puts "Vbox #{VBOX_VERSION}"
 external = File.join(__dir__, "..", "box.yml")
 internal = File.join(__dir__, "box.yml")
 nested = File.join(__dir__, "configure", "box.yml")
-if (File.exist?(external))
-  configure = YAML.load_file(external)
-  puts "Used box configuration: #{external}"
-elsif (File.exist?(internal))
-  configure = YAML.load_file(internal)
-  puts "Used box configuration: #{internal}"
-elsif (File.exist?(nested))
-  configure = YAML.load_file(nested)
-  puts "Used box configuration: #{nested}"
-else
+configPath = nested if (File.exist?(nested))
+configPath = internal if (File.exist?(internal))
+configPath = external if (File.exist?(external))
+if (configPath.nil?)
   raise "No box.yml found. Copy and paste configure/box.sample.yml in your main project and name it box.yml."
 end
+
+configure = YAML.load_file(configPath)
+puts "Used box configuration: #{configPath}"
 
 ########################################################################################################################
 # Generate configs
