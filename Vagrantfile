@@ -3,7 +3,7 @@ require "erb"
 
 # Get and print version information
 VBOX_VERSION = File.read("VERSION")
-puts "Vbox #{VBOX_VERSION}"
+puts "-> Vbox #{VBOX_VERSION}"
 
 ########################################################################################################################
 # Load the box configuration
@@ -16,21 +16,36 @@ puts "Vbox #{VBOX_VERSION}"
 external = File.join(__dir__, "..", "box.yml")
 internal = File.join(__dir__, "box.yml")
 nested = File.join(__dir__, "configure", "box.yml")
-if (File.exist?(external))
-  configure = YAML.load_file(external)
-  puts "Used box configuration: #{external}"
-elsif (File.exist?(internal))
-  configure = YAML.load_file(internal)
-  puts "Used box configuration: #{internal}"
-elsif (File.exist?(nested))
-  configure = YAML.load_file(nested)
-  puts "Used box configuration: #{nested}"
-else
+configPath = nested if (File.exist?(nested))
+configPath = internal if (File.exist?(internal))
+configPath = external if (File.exist?(external))
+if (configPath.nil?)
   raise "No box.yml found. Copy and paste configure/box.sample.yml in your main project and name it box.yml."
 end
 
+configure = YAML.load_file(configPath)
+puts "-> Used box configuration: #{configPath}"
+
 ########################################################################################################################
-# Generate configs
+# Override box configuration with individual per developer configuratins.
+########################################################################################################################
+externalOverride = File.join(__dir__, "..", "box.override.yml")
+internalOverride = File.join(__dir__, "box.override.yml")
+nestedOverride = File.join(__dir__, "configure", "box.override.yml")
+overridePath = nestedOverride if (File.exist?(nestedOverride))
+overridePath = internalOverride if (File.exist?(internalOverride))
+overridePath = externalOverride if (File.exist?(externalOverride))
+
+if (overridePath.nil?)
+  puts "-> No override of box.yml is provided."
+else
+  configOverrides = YAML.load_file(overridePath)
+  configure.merge!(configOverrides)
+  puts "-> Overriding box.yml configuration with values from #{overridePath}."
+end
+
+########################################################################################################################
+# Generate webserver configs
 ########################################################################################################################
 vars = configure
 nginxConf = ERB.new File.read("provisioning/templates/nginx/nginx-default.conf.erb")
