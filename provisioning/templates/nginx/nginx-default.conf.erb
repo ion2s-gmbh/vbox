@@ -22,6 +22,7 @@ server {
 
             # With php-fpm (or other unix sockets):
             fastcgi_pass unix:/var/run/php/php<%= vars['php']['current'] %>-fpm.sock;
+            fastcgi_read_timeout 3600s;
         }
         <% end %>
 }
@@ -50,6 +51,7 @@ server {
 
             # With php-fpm (or other unix sockets):
             fastcgi_pass unix:/var/run/php/php<%= vars['php']['current'] %>-fpm.sock;
+            fastcgi_read_timeout 3600s;
         }
 }
 <% end %>
