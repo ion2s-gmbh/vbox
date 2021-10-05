@@ -12,7 +12,7 @@ mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "USE mysql; UPDATE user SET host='%'
 mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "FLUSH PRIVILEGES;" > /dev/null 2>&1
 
 # Create the database
-mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE database ${MYSQL_DATABASE};" > /dev/null 2>&1
+mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE database ${MYSQL_DATABASE} CHARACTER SET ${MYSQL_DATABASE_CHARSET} COLLATE ${MYSQL_DATABASE_COLLATION};" > /dev/null 2>&1
 
 # Create the application's user
 mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "USE mysql; CREATE USER '${MYSQL_USER_NAME}'@'localhost' IDENTIFIED BY '${MYSQL_USER_PASSWORD}';" > /dev/null 2>&1

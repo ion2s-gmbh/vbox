@@ -164,9 +164,18 @@ node:
 # If the file exists, it is copied to /tmp/mysql/migration.sql in the vagrant box and imported by the mysql.sh
 # provisioning script.
 #
+# Examples for charset and collation
+#   charset: latin1
+#   collation: latin1_swedish_ci
+#
+#   charset: utf8
+#   collation: utf8_general_ci
+#
 ########################################################################################################################
 mysql:
   MYSQL_DATABASE: mydb
+  MYSQL_DATABASE_CHARSET: latin1
+  MYSQL_DATABASE_COLLATION: latin1_swedish_ci
   MYSQL_ROOT_PASSWORD: root!
   MYSQL_USER_NAME: app
   MYSQL_USER_PASSWORD: app!
