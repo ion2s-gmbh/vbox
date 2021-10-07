@@ -16,6 +16,9 @@ apt-get install -y \
 ${PHP_MODULES}
 
 # Copy configs
+if [ -f "/home/vagrant/php/php.ini" ]; then
+    cp /home/vagrant/php/php.ini 	/etc/php/${PHP_VERSION}/fpm/php.ini
+fi
 cp /vagrant/provisioning/configs/php/xdebug.ini /etc/php/${PHP_VERSION}/mods-available
 
 # Restart PHP

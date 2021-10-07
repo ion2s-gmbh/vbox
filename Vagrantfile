@@ -124,7 +124,15 @@ Vagrant.configure("2") do |config|
 
   # PHP
   if configure["provision"]["php"]
+
+    # Copy custom php.ini file
+    if !configure["php"]["ini_path"].nil? && !configure["php"]["ini_path"].empty?
+      config.vm.provision "file", source: configure["php"]["ini_path"], destination: "/home/vagrant/php/php.ini"
+    end
+
     configure["php"]["versions"].each do |version|
+
+        # Prepare php modules
         if !configure["php"]["modules"].nil? && !configure["php"]["modules"].empty?
             modules = Array.new
             configure["php"]["modules"].each do |mod|
@@ -138,7 +146,8 @@ Vagrant.configure("2") do |config|
        env: {
          "PHP_VERSION" => version,
          "PHP_MODULES" => mods,
-         "PHP_CURRENT" => configure["php"]["current"]
+         "PHP_CURRENT" => configure["php"]["current"],
+         "PHP_INI" => configure["php"]["php_ini"]
        }
 
        if configure["php"]["ioncube"]
