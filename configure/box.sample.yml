@@ -81,6 +81,7 @@ provision:
   mysql: false
   mailhog: false
   memcached: false
+  mongodb: false
   redis: false
   docker: false
   welcome: true
@@ -137,7 +138,7 @@ php:
     - opcache
     - sqlite3
     - intl
-  ini_path: 
+  ini_path:
   ioncube: false
 
 ########################################################################################################################

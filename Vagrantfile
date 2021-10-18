@@ -211,6 +211,13 @@ Vagrant.configure("2") do |config|
      env: configure["mysql"]
   end
 
+  # MongoDB
+  if configure["provision"]["mongodb"]
+    config.vm.provision "mongodb",
+     type: "shell",
+     path: "provisioning/mongodb.sh"
+  end
+
   # MailHog
   if configure["provision"]["mailhog"]
     config.vm.provision "mailhog",
